@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace League_Randomizer
 {
@@ -12,19 +13,19 @@ namespace League_Randomizer
         public static bool dragonslayer = false;
         public static bool spiritBlossom = false;
 
-        public static string appVer = "alpha1";
+        public static string appVer = "alpha2";
 
         public static int skinNum;
         public static int oldSkin;
         public static int chromaNum;
         public static int oldChroma;
-        public static int champNum = 0;
+        public static int champNum = 0;                     //defaults to vayne's corresponding champNum
         #endregion
         #region arrays
-        public static string[] vayne = { "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" };
-        public static string[] annie = { "Annie-versary", "Prom Queen" };
-        public static string[] tristana = { "tristana1", "tristana2", "tristana3" };
-        public static string[] twitch = { "twitch1", "twitch2", "twitch3", "twitch4" };
+        public static string[] vayne = { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" };
+        public static string[] annie = { "ANNIE", "Annie-versary", "Prom Queen" };
+        public static string[] tristana = { "TRISTANA", "tristana1", "tristana2", "tristana3" };
+        public static string[] twitch = { "TWITCH", "twitch1", "twitch2", "twitch3", "twitch4" };
         public static string[][] champions = 
         {
             vayne, annie, tristana, twitch
@@ -39,9 +40,9 @@ namespace League_Randomizer
                 first = false;
                 Intro();
             }
-            oldSkin = oldChroma = 20;                       //both ints back to 20 after clear/reset/champ change
+            oldSkin = oldChroma = 20;                       //both ints back to 20 after clear/reset/change
             Console.WriteLine("League Randomizer " + appVer);
-            Console.WriteLine(champions[champNum]);
+            Console.WriteLine(champions[champNum][0]);
             Console.WriteLine(champNum);
             while (!false)
             {
@@ -57,24 +58,23 @@ namespace League_Randomizer
             #region misc.
             if (r == "clear"
                 || r == "cle"
-                || r == "clea") { Main(); }
-            /*else if (r == "c"
+                || r == "clea") { Main(); }                 //returns to Main, automatically clearing screen
+            else if (r == "c"
                 || r == "cl"
-                || r == "changelog") { Changelog(); }
-            else if (r == "h"
+                || r == "changelog") { Changelog(); }       //calls changelog function
+            /*else if (r == "h"
                 || r == "hel"
                 || r == "help") { Help(); }*/
             else if (r == "intro" || r == "reset")
             {
-                first = true;
+                first = true;                               //resets the program and allows Intro to run in Main
                 Main();
             }
-            /*else if (r == "r" || r == "rand" || r == "random")
+            else if (r == "r" || r == "rand" || r == "random")
             {
-                champNum = randomObject.Next(1, total + 1); //max always has to be 1 more
-                while (champNum == oldchampNum) { champNum = randomObject.Next(1, total + 1); }
-                ChampName(champNum);
-            }*/
+                champNum = roll.Next(champions.Length);     //rolls a random champion then returns to Main
+                Main();
+            }
             #endregion
             #region champions
             #region A
@@ -715,15 +715,6 @@ namespace League_Randomizer
                 || r == "vay"
                 || r == "vayn"
                 || r == "vayne") { champNum = 76; }
-            else if (r == "sb"
-                || r == "sp"
-                || r == "spi"
-                || r == "spir"
-                || r == "spiri"
-                || r == "flor"
-                || r == "spirit"
-                || r == "blossom"
-                || r == "spirit blossom") { champNum = 1076; }
             else if (r == "vei"
                 || r == "veig"
                 || r == "veiga"
@@ -853,24 +844,27 @@ namespace League_Randomizer
                 || r == "blossom"
                 || r == "spirit blossom") { spiritBlossom = true; }
             #endregion
+            #region invalid
             else if (r.Length > 0)
             {
                 invalid = true;
                 Red();
                 Console.WriteLine("Invalid input. Please try again.\n");
             }
+            #endregion
         }
         static void Skin()
         {
-            int length = champions[champNum].Length;        //gets NUMBER OF OBJECTS in specific array, indexed
-                                                            //by champNum; ex. champNum=1 -> 2 in Annie
-            skinNum = roll.Next(length);                    //rolls amount equal to amount of skins in the array
-            while (skinNum == oldSkin) { skinNum = roll.Next(length); } //eliminates repeats
-            if (dragonslayer) { dragonslayer = false; skinNum = 2; }    //assigns 2 to skin so it always rolls Dragonslayer
-            if (spiritBlossom) { spiritBlossom = false; skinNum = 8; }  //same as above but 8 so it rolls Spirit Blossom
-            string name = champions[champNum][skinNum];     //gets STRING in specific array in specific place, 
-                                                            //indexed by champNum then skinNum
-                                                            //ex. champNum=75 & skinNum=1 -> Aristocrat
+            int length = champions[champNum].Length;        //gets NUMBER OF OBJECTS in champions array, indexed
+                                                                //by champNum; ex. champNum=1 -> 3 in Annie
+            skinNum = roll.Next(1, length);                 //rolls amount equal to amount of skins in the array
+                                                                //EXCLUDING index 0 which is the champion name
+            while (skinNum == oldSkin) { skinNum = roll.Next(1, length); }  //eliminates repeats
+            if (dragonslayer) { dragonslayer = false; skinNum = 3; }    //assigns 3 to skin so it always rolls Dragonslayer
+            if (spiritBlossom) { spiritBlossom = false; skinNum = 9; }  //same as above but 9 so it rolls Spirit Blossom
+            string name = champions[champNum][skinNum];     //gets STRING in champions array in specific place, 
+                                                                //indexed by champNum then skinNum
+                                                                //ex. champNum=75 & skinNum=2 -> Aristocrat
             Console.Write(name);
             int lastIndex = name.Length - 1;                //assigns value of last index of name
             if (name[lastIndex] == ' ')                     //checks for a space at the end of name because skins
@@ -904,18 +898,34 @@ namespace League_Randomizer
                         case 7: { Console.Write("White"); break; }
                     }
                 }
-                oldChroma = chromaNum;                      //prevents repeats when chroma skin is called again
+                oldChroma = chromaNum;                      //assigns last chromaNum value to prevent repeats
             }
-            oldSkin = skinNum;
+            oldSkin = skinNum;                              //same as above, for all skins (not only for chromas) 
             Console.WriteLine("\n");
         }
-
 
 
         static void Intro()
         {
             Console.WriteLine("EVEN BETTER RANDOMIZER?");
         }
+        static void Changelog()
+        {
+            Console.Clear();
+
+            Console.Write("alpha1: ");
+            Console.WriteLine("Began re-write of Skin_Chooser_2 using arrays and proper form.");
+
+            Console.Write("alpha2: ");
+            Console.WriteLine("Added champion name to index 0 of each array, to be displayed in header. " +
+                "Adjusted random roll to not include");
+            Console.WriteLine("   index 0 and added more comments. Random function now works, and changelog " +
+                "can be called.");
+
+            Console.ReadLine();
+            Main();
+        }
+
         static void Red() { Console.ForegroundColor = ConsoleColor.Red; }
     }
 }
