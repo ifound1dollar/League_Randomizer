@@ -3,26 +3,65 @@ using System.Collections.Generic;
 
 namespace League_Randomizer
 {
-    class Program   ///add include default setting to program
+    class Program   ///add 'include default' setting to program
     {
+    /// Defines variables upon program start that are used throughout the class.
+    /// 
+    /// Defines Random that is used in Skin function.
+    /// 
+    /// Booleans: (default to false)
+    ///     first: Used in Reply and Main, and assigned True immediately so Main assigns value to champNum 
+    ///         (see below) and calls Intro. Assigned in Reply when input is to reset program; used in Main
+    ///         before loop to re-assign Vayne's champNum and call Intro again.
+    ///     invalid: Used in Reply and Main. Assigned in Reply when user input is invalid; used in Main to
+    ///         continue (return to top of) the while loop.
+    ///     dragonslayer/spiritBlossom: Used in Reply and Skin. Assigned in Reply when user input
+    ///         corresponds with skin string(s); used in Skin to ensure that Dragonslayer or Spirit Blossom
+    ///         (and their variants) are rolled.
+    ///     
+    /// Integers:
+    ///     champNum: Used in Main, Reply, and Skin. Assigned values in Reply when user input is equal to
+    ///         corresponding champion name; used in Main to display header info, used in Reply to check if
+    ///         user intends to change champion mode (in addition to assignment), and used in Skin to index
+    ///         which string array (aka champion) is in use.
+    ///     oldChampNum: Used in Reply. Assigned values at top of Reply equal to previously rolled skin;
+    ///         used to check whether champNum has changed during the Reply function.
+    ///     skinNum: Used in Skin. Assigned values using roll (Random) according to number of strings in
+    ///         corresponding arrays; used to select specific string in corresponding array.
+    ///     oldSkin: Used in Skin. Assigned values at the end of skin equal to rolled skin; used to prevent
+    ///         repeats.
+    ///     chromaNum: Used in Skin (similar to skinNum). Assigned values using roll (Random) according to
+    ///         number of strings in LOCALLY defined arrays corresponding to specific skins with chromas;
+    ///         used to select specific string in corresponding array.
+    ///     oldChroma: Used in Skin (very similar to oldSkin). Assigned values equal to rolled skin at end
+    ///         and end of conditional statement within Skin; used to prevent repeats of chromas.
+    /// (See summaries (specifically Skin) for more detailed info)
+    /// 
+    /// String array (jagged, aka arrays within array): This is where all of the champion arrays and strings 
+    ///     are located. Each champion is arranged chronologically (Alistar being the first, most recent being
+    ///     the last). Index 0 is null so the indexes correspond to the literal champion number, beginning at
+    ///     1. Each champion's string array includes the champion name in index 0, then the skin names after.
+    ///     Champions with only "Default" available need only the name and "Default" in the array. Skins with
+    ///     chromas available need to end with a SPACE; Skin checks this to determine whether it has a chroma.
+    ///     (See Skin summary for more)
         #region init
         static readonly Random roll = new();
 
-        static bool first = true;                           //bools default to FALSE
+        static bool first = true;
         static bool invalid;
         static bool dragonslayer;
         static bool spiritBlossom;
 
+        static int champNum;
+        static int oldChampNum;
         static int skinNum;
         static int oldSkin;
         static int chromaNum;
         static int oldChroma;
-        static int champNum;
-        static int oldChampNum;
 
         static readonly string[][] champions =
         {
-            new string[] { "null" },            //this causes the index to correspond to literal champion number
+            new string[] { "null" },
             new string[] { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" },
             new string[] { "ANNIE", "Annie-versary", "Prom Queen" },
             new string[] { "TRISTANA", "tristana1", "tristana2", "tristana3" },
@@ -32,21 +71,42 @@ namespace League_Randomizer
         static readonly string appVer = "alpha2";
 
         static void Main()
+        /// Program is focused primarily in Main function, where the while loop is located. Calls other
+        /// functions generously.
+        ///
+        /// Clears the screen each time Main is called (including program start).
+        /// 
+        /// Checks 'first', which is set to true when the program is first started (or reset). If true, changes
+        /// boolean to false (so it doesn't run Intro and reset champNum every time Main is called), then
+        /// assigns Vayne's index to champNum and calls Intro function.
+        /// 
+        /// Both oldSkin and oldChroma are reset to -1 (which is inaccessible by indexing and therefore safe to
+        /// use as a placeholder value) because Main is only ever called when there is a change that would not
+        /// need to use the anti-repeat functionality.
+        /// 
+        /// Displays header info. First, program name and then the app version. Second, displays the first 
+        ///     string in the array, indexed by champNum, inside of the 'champions' jagged array.
+        ///     ex. champNum = 76 -> "VAYNE" (index 0 of 76th array)
+        ///     Third, displays the champion index number.
+        /// 
+        /// BEGINS WHILE LOOP. Immediately calls Reply to get user input. After program returns to loop from
+        /// Reply (if it does not call Main), checks if 'invalid' was set to true. If so, returns to top of
+        /// loop and calls Reply again. If not, continues on to call Skin function. When program returns to
+        /// loop, reaches the end and returns to the top. Rinse and repeat.
         {
             Console.Clear();
             if (first)
             {
                 first = false;
-                champNum = 1;                 //defaults/returns to Vayne's default index number
+                champNum = 1;
                 Intro();
             }
-            oldSkin = oldChroma = -1;                       //both ints back to -1 after clear/reset/change
+            oldSkin = oldChroma = -1;
             Console.WriteLine("League Randomizer " + appVer);
-            Console.WriteLine(champions[champNum][0]);      //displays the string in the first index of champNum
-            Console.WriteLine(champNum);                    //displays the champion number
+            Console.WriteLine(champions[champNum][0]);
+            Console.WriteLine(champNum);
             while (!false)
             {
-                oldChampNum = champNum;                     //lets program know if champNum changes in Reply
                 Reply();
                 if (invalid) { invalid = false; continue; }
                 Skin();
@@ -54,6 +114,39 @@ namespace League_Randomizer
         }
         static void Reply()
         {
+        /// Reply function exists to get the user's input. All conditionals use else if (except for first).
+        /// 
+        /// 'oldChampNum' is reset to equal champNum every time Reply is called. This allows the below if()
+        /// statement to check if the variable was changed inside the 'champions' region.
+        ///
+        /// Displays a prompt and defines a string according to the user's input, casted to lowercase.
+        ///
+        /// Misc region:
+        ///     clear: returns to Main, automatically clearing the screen.
+        ///     changelog: calls changelog function, which displays changelog and has then returns to Main.
+        ///     help: WIP
+        ///     intro/reset: assigns True to 'first' then returns to Main. This allows Intro to be called and 
+        ///         resets champNum to Vayne's corresponding index number.
+        ///     random: rolls champNum using the number of string arrays inside champions (jagged array), then
+        ///         returns to Main.
+        /// 
+        /// Champions region:
+        ///     Checks if user input corresponds with any champion names or numbers. Organized alphbetically to
+        ///     make it readable. If so, changes champNum according to which champion name was input. (More
+        ///     relating to this below)
+        ///     
+        /// Dragonslayer/Spirit Blossom region:
+        ///     Checks if user input corresponds with dragonslayer or spirit blossom. If so, respective booleans
+        ///     are assigned True, which are used in Skin. (More on this summarized in Skin function)
+        ///     
+        /// Invalid region:
+        ///     Checks if user input was more than enter, but did not make any of the above conditionals true.
+        ///     If so, displays an error message and sets 'invalid' boolean to true, which is used in Main
+        ///     (Explained in summary). Marks the end of input conditionals and returns to while loop in Main.
+        ///     
+        /// FINALLY, checks if champNum has changed since the beginning of the Reply function. If so, returns to
+        /// Main; if not, returns to while loop.
+            oldChampNum = champNum;
             Console.Write("Press enter to run...");
             string r = Console.ReadLine().ToLower();
             #region misc.
@@ -83,22 +176,22 @@ namespace League_Randomizer
                 || r == "aat"
                 || r == "aatr"
                 || r == "aatro"
-                || r == "aatrox") { champNum = 114; }
+                || r == "aatrox" || r == "114") { champNum = 114; }
             else if (r == "ah"
                 || r == "ahr"
                 || r == "ninetails"
                 || r == "rule34"
-                || r == "ahri") { champNum = 89; }
+                || r == "ahri" || r == "89") { champNum = 89; }
             else if (r == "ak"
                 || r == "aka"
                 || r == "akal"
-                || r == "akali") { champNum = 51; }
+                || r == "akali" || r == "51") { champNum = 51; }
             else if (r == "al"
                 || r == "ali"
                 || r == "cow"
                 || r == "alis"
                 || r == "alist"
-                || r == "alistar") { champNum = 1; }
+                || r == "alistar" || r == "1") { champNum = 1; }
             else if (r == "am"
                 || r == "mu"
                 || r == "amu"
@@ -106,28 +199,28 @@ namespace League_Randomizer
                 || r == "mummy"
                 || r == "mum"
                 || r == "mumy"
-                || r == "amumu") { champNum = 24; }
+                || r == "amumu" || r == "24") { champNum = 24; }
             else if (r == "ani"
                 || r == "egg"
                 || r == "anivegg"
                 || r == "eggnivia"
                 || r == "aniv"
-                || r == "anivia") { champNum = 26; }
+                || r == "anivia" || r == "26") { champNum = 26; }
             else if (r == "ann"
                 || r == "anni"
                 || r == "teddy"
                 || r == "teddybear"
                 || r == "teddy bear"
                 || r == "tibbers"
-                || r == "annie") { champNum = 2; }
+                || r == "annie" || r == "2") { champNum = 2; }
             else if (r == "aph"
                 || r == "aphe"
                 || r == "aphel"
-                || r == "aphelios") { champNum = 147; }
+                || r == "aphelios" || r == "147") { champNum = 147; }
             else if (r == "as"
                 || r == "ash"
                 || r == "slow"
-                || r == "ashe") { champNum = 3; }
+                || r == "ashe" || r == "3") { champNum = 3; }
             else if (r == "au"
                 || r == "aur"
                 || r == "sol"
@@ -135,12 +228,12 @@ namespace League_Randomizer
                 || r == "star"
                 || r == "star guy"
                 || r == "aurelion sol"
-                || r == "aurelionsol") { champNum = 130; }
+                || r == "aurelionsol" || r == "130") { champNum = 130; }
             else if (r == "az"
                 || r == "azi"
                 || r == "soldier"
                 || r == "soldiers"
-                || r == "azir") { champNum = 121; }
+                || r == "azir" || r == "121") { champNum = 121; }
             #endregion
             #region B
             else if (r == "ba"
@@ -317,7 +410,6 @@ namespace League_Randomizer
                 || r == "jayce") { champNum = 100; }
             else if (r == "jh"
                 || r == "jhi"
-                || r == "4"
                 || r == "four"
                 || r == "jhin") { champNum = 129; }
             else if (r == "ji"
@@ -829,13 +921,13 @@ namespace League_Randomizer
             #endregion
             #endregion
             #region ds/sb
-            else if (r == "ds"
+            else if ((r == "ds"
                 || r == "dra"
                 || r == "drag"
                 || r == "dragon"
                 || r == "slayer"
-                || r == "dragonslayer") { dragonslayer = true; }
-            else if (r == "sb"
+                || r == "dragonslayer") && champNum == 76) { dragonslayer = true; }
+            else if ((r == "sb"
                 || r == "sp"
                 || r == "spi"
                 || r == "spir"
@@ -843,7 +935,7 @@ namespace League_Randomizer
                 || r == "flor"
                 || r == "spirit"
                 || r == "blossom"
-                || r == "spirit blossom") { spiritBlossom = true; }
+                || r == "spirit blossom") && champNum == 76) { spiritBlossom = true; }
             #endregion
             #region invalid
             else if (r.Length > 0)
@@ -854,27 +946,60 @@ namespace League_Randomizer
                 Console.ResetColor();
             }
             #endregion
-            if (champNum != oldChampNum) { Main(); }        //if champNum has changed, return to Main
+            if (champNum != oldChampNum) { Main(); }
         }
         static void Skin()
         {
-            int length = champions[champNum].Length;        //gets NUMBER OF OBJECTS in champions array, indexed
-                                                                //by champNum; ex. champNum=1 -> 3 in Annie
-            skinNum = roll.Next(1, length);                 //rolls amount equal to amount of skins in the array
-                                                                //EXCLUDING index 0 which is the champion name
-            while ((skinNum == oldSkin) && (length >= 3))   //checks if new roll is same as last, and if there
-            {                                                   //is more than just "Default" in champNum array
-                skinNum = roll.Next(1, length);             //rerolls until it is not the same as oldSkin
+        /// Defines 'length' by getting the Length of the array in champions (jagged array), indexed by champNum;
+        /// ex. champNum=2 -> 3 objects in Annie (includes first object which is the champion name).
+        ///
+        /// Rolls skinNum starting at index 1 (0 is the champion's name) and up to length, since that's how many
+        /// objects exist inside the array.
+        ///
+        /// While loop checks if the newly rolled skin is equal to the previous skin (which is not defined the
+        /// first time) AND the amount of available skins in the array is more than 2 (if it is two, the only
+        /// skin is "Default" and it is only rolling that skin; while loop will run infinitely if it does not
+        /// check for length because skinNum will always equal oldSkin). Inside of while loop rolls again until
+        /// the new skin is not the same as the previous one.
+        ///
+        /// If dragonslayer or spiritBlossom are true (from Reply), changes them back to false and assigns 3 or 9
+        /// (respectively) to skinNum so it displays the corresponding skin. (More on this below)
+        ///
+        /// Defines 'name' by locating the string inside of champions (jagged array), using champNum to index
+        /// which array (champion) to select then skinNum to index which string (skin) to select.
+        /// ex. champNum=76 & skinNum=2 -> Aristocrat
+            int length = champions[champNum].Length;
+            skinNum = roll.Next(1, length);
+            while ((skinNum == oldSkin) && (length > 2))
+            {
+                skinNum = roll.Next(1, length);
             }
-            if (dragonslayer) { dragonslayer = false; skinNum = 3; }    //assigns 3 to skin so it always rolls Dragonslayer
-            if (spiritBlossom) { spiritBlossom = false; skinNum = 9; }  //same as above but 9 so it rolls Spirit Blossom
-            string name = champions[champNum][skinNum];     //gets STRING in champions array in specific place, 
-                                                                //indexed by champNum then skinNum
-                                                                //ex. champNum=75 & skinNum=2 -> Aristocrat
+            if (dragonslayer) { dragonslayer = false; skinNum = 3; }
+            if (spiritBlossom) { spiritBlossom = false; skinNum = 9; }
+            string name = champions[champNum][skinNum];
             Console.Write(name);
-            int lastIndex = name.Length - 1;                //assigns value of last index of name
-            if (name[lastIndex] == ' ')                     //checks for a space at the end of name because skins
-            {                                                   //with chromas have a space at the end
+
+        /// Defines lastIndex by taking 1 less than the length of name, defined above. This allows the program to
+        /// check what the last character in name is.
+        ///
+        /// Checks if the last character in name is a space. If it is, the program knows that the selected skin
+        /// has chromas and the colors need to be rolled individually. (See next)
+        ///
+        /// Checks which skin with a chroma was rolled and assigns an array with the chroma colors depending on
+        /// which skin it is.
+        /// ex. Dragonslayer has Green, Red, and Silver (and a blank option so it is able to display the skin
+        /// without a chroma). It then rolls a number and eliminates repeats like above (does not need to check
+        /// for length, though) and displays the chroma color from the array by indexing it according to the
+        /// value of chromaNum.
+        ///
+        /// Assigns the chromaNum value to oldChroma so if the same skin is rolled again (which will only happen
+        /// if the user activates dragonslayer or spiritBlossom), the anti-repeat while loop will run.
+        ///
+        /// FINALLY, assigns the skinNum value to oldSkin to prevent repeats, similar to above with chromas.
+        /// Console.WriteLine ends the line and jumps another line using \n.
+            int lastIndex = name.Length - 1;
+            if (name[lastIndex] == ' ')
+            {
                 if (name == "Dragonslayer ")
                 {
                     string[] dragonslayer = { "", "Green", "Red", "Silver" };
@@ -889,9 +1014,9 @@ namespace League_Randomizer
                     while (chromaNum == oldChroma) { chromaNum = roll.Next(8); }
                     Console.Write(spiritBlossom[chromaNum]);
                 }
-                oldChroma = chromaNum;                      //assigns last chromaNum value to prevent repeats
+                oldChroma = chromaNum;
             }
-            oldSkin = skinNum;                              //same as above, for all skins (not only for chromas)
+            oldSkin = skinNum;
             Console.WriteLine("\n");
         }
 
@@ -899,6 +1024,7 @@ namespace League_Randomizer
         static void Intro()
         {
             Console.WriteLine("EVEN BETTER RANDOMIZER?");
+            Console.ReadKey();
         }
         static void Changelog()
         {
@@ -913,12 +1039,16 @@ namespace League_Randomizer
             Console.WriteLine("   index 0 and added more comments. Random function now works, and changelog " +
                 "can be called.");
 
-            Console.Write("alpha3: ");
+            Console.Write("alpha3 (9/17/2021): ");
             Console.WriteLine("Simplified dragonslayer and spiritBlossom by swapping switch statement with " +
-                "array that is called based on roll");
-            Console.WriteLine("   value. String arrays now initialized within champions jagged array, also " +
-                "added null at index 0.");
+                "array that is called");
+            Console.WriteLine("   based on roll value. String arrays now initialized within champions jagged " +
+                "array, also added null at index 0.");
 
+            Console.Write("alpha4 (9/18/2021): ");
+            Console.WriteLine("Removed \"4\" from Jhin in Reply so number input works. Added extensive " +
+                "summaries to functions. Fixed");
+            Console.WriteLine("   ds/sb conditional to require Vayne's champNum value.");
 
             Console.ReadLine();
             Main();
