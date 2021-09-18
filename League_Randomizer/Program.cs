@@ -68,7 +68,7 @@ namespace League_Randomizer
             new string[] { "TWITCH", "tw1", "tw2", "tw3", "tw4" }
         };
         #endregion
-        static readonly string appVer = "alpha2";
+        static readonly string appVer = "v0.1.0";
 
         static void Main()
         /// Program is focused primarily in Main function, where the while loop is located. Calls other
@@ -78,7 +78,7 @@ namespace League_Randomizer
         /// 
         /// Checks 'first', which is set to true when the program is first started (or reset). If true, changes
         /// boolean to false (so it doesn't run Intro and reset champNum every time Main is called), then
-        /// assigns Vayne's index to champNum and calls Intro function.
+        /// assigns Vayne's index to champNum and calls Intro function. Clears screen when returning from Intro.
         /// 
         /// Both oldSkin and oldChroma are reset to -1 (which is inaccessible by indexing and therefore safe to
         /// use as a placeholder value) because Main is only ever called when there is a change that would not
@@ -100,6 +100,7 @@ namespace League_Randomizer
                 first = false;
                 champNum = 1;
                 Intro();
+                Console.Clear();
             }
             oldSkin = oldChroma = -1;
             Console.WriteLine("League Randomizer " + appVer);
@@ -123,8 +124,8 @@ namespace League_Randomizer
         ///
         /// Misc region:
         ///     clear: returns to Main, automatically clearing the screen.
-        ///     changelog: calls changelog function, which displays changelog and has then returns to Main.
-        ///     help: WIP
+        ///     changelog: calls Changelog function, which displays changelog and has then returns to Main.
+        ///     help: calls Help function, which displays commands, prompts user and returns to Main.
         ///     intro/reset: assigns True to 'first' then returns to Main. This allows Intro to be called and 
         ///         resets champNum to Vayne's corresponding index number.
         ///     random: rolls champNum using the number of string arrays inside champions (jagged array), then
@@ -152,21 +153,21 @@ namespace League_Randomizer
             #region misc.
             if (r == "clear"
                 || r == "cle"
-                || r == "clea") { Main(); }                 //returns to Main, automatically clearing screen
+                || r == "clea") { Main(); }
             else if (r == "c"
                 || r == "cl"
-                || r == "changelog") { Changelog(); }       //calls changelog function
-            /*else if (r == "h"
+                || r == "changelog") { Changelog(); }
+            else if (r == "h"
                 || r == "hel"
-                || r == "help") { Help(); }*/
+                || r == "help") { Help(); }
             else if (r == "intro" || r == "reset")
             {
-                first = true;                               //resets the program and allows Intro to run in Main
+                first = true;
                 Main();
             }
             else if (r == "r" || r == "rand" || r == "random")
             {
-                champNum = roll.Next(champions.Length);     //rolls a random champion then returns to Main
+                champNum = roll.Next(champions.Length);
                 Main();
             }
             #endregion
@@ -979,11 +980,8 @@ namespace League_Randomizer
             string name = champions[champNum][skinNum];
             Console.Write(name);
 
-        /// Defines lastIndex by taking 1 less than the length of name, defined above. This allows the program to
-        /// check what the last character in name is.
-        ///
-        /// Checks if the last character in name is a space. If it is, the program knows that the selected skin
-        /// has chromas and the colors need to be rolled individually. (See next)
+        /// Checks if the last character in name is a space using EndsWith method. If it is, the program knows
+        /// that the selected skin has chromas and the colors need to be rolled individually. (See next)
         ///
         /// Checks which skin with a chroma was rolled and assigns an array with the chroma colors depending on
         /// which skin it is.
@@ -997,8 +995,7 @@ namespace League_Randomizer
         ///
         /// FINALLY, assigns the skinNum value to oldSkin to prevent repeats, similar to above with chromas.
         /// Console.WriteLine ends the line and jumps another line using \n.
-            int lastIndex = name.Length - 1;
-            if (name[lastIndex] == ' ')
+            if (name.EndsWith(' '))
             {
                 if (name == "Dragonslayer ")
                 {
@@ -1022,38 +1019,134 @@ namespace League_Randomizer
 
 
         static void Intro()
+        /// This is a basic formatted introduction screen for the app.
+        /// 
+        /// Begin by defining the two strings being displayed and assigning them to 'intro' and 'begin'.
+        /// 
+        /// Text is shifted down 12 lines using \n. Next, a new string begins at the window width minus the
+        ///     length of the string, divided by 2; WriteLine displays the actual text and ends the line.
+        /// Both 'begin' and 'intro' use this method.
+        /// 
+        /// Gets user key input to continue on to program.
         {
-            Console.WriteLine("EVEN BETTER RANDOMIZER?");
+            string intro = "ifound1dollar's League of Legends Randomizer " + appVer;
+            string begin = "Press any key to begin...";
+            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n");
+            Console.Write(new string(' ', (Console.WindowWidth - intro.Length) / 2));
+            Console.WriteLine(intro);
+            Console.Write(new string(' ', (Console.WindowWidth - begin.Length) / 2));
+            Console.WriteLine(begin);
             Console.ReadKey();
         }
         static void Changelog()
+        /// Simple changelog that can be accessed when user enters c (among other inputs).
+        ///
+        /// Integer 'ver' is defined and assigned 0 immediately, to be used in a while loop later (see below).
+        /// 
+        /// Two string arrays are defined and assigned strings corresponding to the app version. Separate
+        ///     arrays are used so they can easily be displayed seperately with different colors.
+        ///     
+        /// Screen is cleared, then Yellow is called to change ConsoleColor. The header is tabbed using \t and
+        ///     displays "CHANGELOG", then skips a line.
+        ///     
+        /// WHILE LOOP BEGINS. Runs until 'ver' displays every string in each array. Calls Cyan, displays
+        ///     version (formatted to be left aligned using 21 chars), calls White, and displays text. Repeats
+        ///     this until 'ver' equals the number of objects in 'versions'.
+        ///     
+        /// Resets color to gray, prompts user to press any key, then reads key and returns to Main.
         {
+            int ver = 0;
+            string[] versions =
+            {
+                "(09/16/2021) alpha1: ",
+                "(09/16/2021) alpha2: ",
+                "(09/17/2021) alpha3: ",
+                "(09/18/2021) alpha4: ",
+                "(09/18/2021) v0.1.0: ",
+            };
+            string[] text =
+            {
+                "Began re-write of Skin_Chooser_2 using arrays and proper form.",
+                "Added champion name to index 0 of each array, to be displayed in header. Adjusted random " +
+                    "roll to\n    not include index 0 and added more comments. Random function now works, " +
+                    "and changelog can be called.",
+                "Simplified dragonslayer and spiritBlossom by swapping switch statement with array that is " +
+                    "called\n    based on roll value. String arrays now initialized within champions jagged " +
+                    "array, also added null at index 0.",
+                "Removed \"4\" from Jhin in Reply so number input works. Added extensive summaries to " +
+                    "functions.\n    Fixed ds/sb conditional to require Vayne's champNum value.",
+                "Created proper intro screen and functions for each ConsoleColor. Changelog and Help are no " +
+                    "longer\n    colossal walls of text; they now use arrays and while loops to change " +
+                    "colors and display info. Adjusted input\n    conditionals in misc. region of Reply."
+            };
+
             Console.Clear();
+            Yellow();
+            Console.WriteLine("\tCHANGELOG:");
+            while (ver < versions.Length)
+            {
+                Cyan();
+                Console.Write(string.Format("\n {0, -21}", versions[ver]));
+                White();
+                Console.WriteLine(text[ver]);
+                ver++;
+            }
+            Console.ResetColor();
+            Console.Write("\nPress any key to return...");
+            Console.ReadKey();
+            Main();
+        }
+        static void Help()
+        /// Works very similar to Changelog; simple help screen showing commands.
+        /// (See Changelog summary)
+        ///
+        {
+            int num = 0;
+            string[] commands =
+            {
+                "Change mode: ",
+                "Random champion: ",
+                "View changelog: ",
+                "This screen: ",
+                "Clear screen: ",
+                "Reset program: "
+            };
+            string[] text =
+            {
+                "input Champion name or number (champion numbers are chronological)\n",
+                "\"r\" or \"rand\" or \"random\"",
+                "\"c\" or \"cl\" or \"changelog\"",
+                "\"h\" or \"help\"",
+                "\"clear\"",
+                "\"reset\" or \"intro\""
+            };
 
-            Console.Write("alpha1: ");
-            Console.WriteLine("Began re-write of Skin_Chooser_2 using arrays and proper form.");
-
-            Console.Write("alpha2: ");
-            Console.WriteLine("Added champion name to index 0 of each array, to be displayed in header. " +
-                "Adjusted random roll to not include");
-            Console.WriteLine("   index 0 and added more comments. Random function now works, and changelog " +
-                "can be called.");
-
-            Console.Write("alpha3 (9/17/2021): ");
-            Console.WriteLine("Simplified dragonslayer and spiritBlossom by swapping switch statement with " +
-                "array that is called");
-            Console.WriteLine("   based on roll value. String arrays now initialized within champions jagged " +
-                "array, also added null at index 0.");
-
-            Console.Write("alpha4 (9/18/2021): ");
-            Console.WriteLine("Removed \"4\" from Jhin in Reply so number input works. Added extensive " +
-                "summaries to functions. Fixed");
-            Console.WriteLine("   ds/sb conditional to require Vayne's champNum value.");
-
-            Console.ReadLine();
+            Console.Clear();
+            Yellow();
+            Console.WriteLine("\tCOMMAND LIST:\n");
+            while (num < commands.Length)
+            {
+                Cyan();
+                Console.Write(string.Format(" {0, -18}", commands[num]));
+                White();
+                Console.WriteLine(text[num]);
+                num++;
+            }
+            Console.ResetColor();
+            Console.Write("\nPress any key to return...");
+            Console.ReadKey();
             Main();
         }
 
+
         static void Red() { Console.ForegroundColor = ConsoleColor.Red; }
+        static void Cyan() { Console.ForegroundColor = ConsoleColor.Cyan; }
+        static void Blue() { Console.ForegroundColor = ConsoleColor.Blue; }
+        static void Green() { Console.ForegroundColor = ConsoleColor.Green; }
+        static void DarkGreen() { Console.ForegroundColor = ConsoleColor.DarkGreen; }
+        static void Yellow() { Console.ForegroundColor = ConsoleColor.Yellow; }
+        static void Magenta() { Console.ForegroundColor = ConsoleColor.Magenta; }
+        static void White() { Console.ForegroundColor = ConsoleColor.White; }
+
     }
 }
