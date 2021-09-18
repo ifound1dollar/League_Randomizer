@@ -3,34 +3,33 @@ using System.Collections.Generic;
 
 namespace League_Randomizer
 {
-    class Program
+    class Program   ///add include default setting to program
     {
-        #region public vars
-        public static Random roll = new();
+        #region init
+        static readonly Random roll = new();
 
-        public static bool first;
-        public static bool invalid = false;
-        public static bool dragonslayer = false;
-        public static bool spiritBlossom = false;
+        static bool first = true;                           //bools default to FALSE
+        static bool invalid;
+        static bool dragonslayer;
+        static bool spiritBlossom;
 
-        public static string appVer = "alpha2";
+        static int skinNum;
+        static int oldSkin;
+        static int chromaNum;
+        static int oldChroma;
+        static int champNum;
+        static int oldChampNum;
 
-        public static int skinNum;
-        public static int oldSkin;
-        public static int chromaNum;
-        public static int oldChroma;
-        public static int champNum = 0;                     //defaults to vayne's corresponding champNum
-        #endregion
-        #region arrays
-        public static string[] vayne = { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" };
-        public static string[] annie = { "ANNIE", "Annie-versary", "Prom Queen" };
-        public static string[] tristana = { "TRISTANA", "tristana1", "tristana2", "tristana3" };
-        public static string[] twitch = { "TWITCH", "twitch1", "twitch2", "twitch3", "twitch4" };
-        public static string[][] champions = 
+        static readonly string[][] champions =
         {
-            vayne, annie, tristana, twitch
+            new string[] { "null" },            //this causes the index to correspond to literal champion number
+            new string[] { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" },
+            new string[] { "ANNIE", "Annie-versary", "Prom Queen" },
+            new string[] { "TRISTANA", "tristana1", "tristana2", "tristana3" },
+            new string[] { "TWITCH", "tw1", "tw2", "tw3", "tw4" }
         };
         #endregion
+        static readonly string appVer = "alpha2";
 
         static void Main()
         {
@@ -38,14 +37,16 @@ namespace League_Randomizer
             if (first)
             {
                 first = false;
+                champNum = 1;                 //defaults/returns to Vayne's default index number
                 Intro();
             }
-            oldSkin = oldChroma = 20;                       //both ints back to 20 after clear/reset/change
+            oldSkin = oldChroma = -1;                       //both ints back to -1 after clear/reset/change
             Console.WriteLine("League Randomizer " + appVer);
-            Console.WriteLine(champions[champNum][0]);
-            Console.WriteLine(champNum);
+            Console.WriteLine(champions[champNum][0]);      //displays the string in the first index of champNum
+            Console.WriteLine(champNum);                    //displays the champion number
             while (!false)
             {
+                oldChampNum = champNum;                     //lets program know if champNum changes in Reply
                 Reply();
                 if (invalid) { invalid = false; continue; }
                 Skin();
@@ -850,8 +851,10 @@ namespace League_Randomizer
                 invalid = true;
                 Red();
                 Console.WriteLine("Invalid input. Please try again.\n");
+                Console.ResetColor();
             }
             #endregion
+            if (champNum != oldChampNum) { Main(); }        //if champNum has changed, return to Main
         }
         static void Skin()
         {
@@ -859,7 +862,10 @@ namespace League_Randomizer
                                                                 //by champNum; ex. champNum=1 -> 3 in Annie
             skinNum = roll.Next(1, length);                 //rolls amount equal to amount of skins in the array
                                                                 //EXCLUDING index 0 which is the champion name
-            while (skinNum == oldSkin) { skinNum = roll.Next(1, length); }  //eliminates repeats
+            while ((skinNum == oldSkin) && (length >= 3))   //checks if new roll is same as last, and if there
+            {                                                   //is more than just "Default" in champNum array
+                skinNum = roll.Next(1, length);             //rerolls until it is not the same as oldSkin
+            }
             if (dragonslayer) { dragonslayer = false; skinNum = 3; }    //assigns 3 to skin so it always rolls Dragonslayer
             if (spiritBlossom) { spiritBlossom = false; skinNum = 9; }  //same as above but 9 so it rolls Spirit Blossom
             string name = champions[champNum][skinNum];     //gets STRING in champions array in specific place, 
@@ -868,39 +874,24 @@ namespace League_Randomizer
             Console.Write(name);
             int lastIndex = name.Length - 1;                //assigns value of last index of name
             if (name[lastIndex] == ' ')                     //checks for a space at the end of name because skins
-            {                                                   //with chromas have a space at the end of the index
+            {                                                   //with chromas have a space at the end
                 if (name == "Dragonslayer ")
                 {
+                    string[] dragonslayer = { "", "Green", "Red", "Silver" };
                     chromaNum = roll.Next(4);
                     while (chromaNum == oldChroma) { chromaNum = roll.Next(4); }
-                    switch (chromaNum)
-                    {
-                        case 0: { Console.Write(""); break; }
-                        case 1: { Console.Write("Green"); break; }
-                        case 2: { Console.Write("Red"); break; }
-                        case 3: { Console.Write("Silver"); break; }
-
-                    }
+                    Console.Write(dragonslayer[chromaNum]);
                 }
                 if (name == "Spirit Blossom ")
                 {
+                    string[] spiritBlossom = { "", "Red", "Yellow", "Green", "Purple", "Pink", "Black", "White" };
                     chromaNum = roll.Next(8);
                     while (chromaNum == oldChroma) { chromaNum = roll.Next(8); }
-                    switch (chromaNum)
-                    {
-                        case 0: { Console.Write(""); break; }
-                        case 1: { Console.Write("Red"); break; }
-                        case 2: { Console.Write("Yellow"); break; }
-                        case 3: { Console.Write("Green"); break; }
-                        case 4: { Console.Write("Purple"); break; }
-                        case 5: { Console.Write("Pink"); break; }
-                        case 6: { Console.Write("Black"); break; }
-                        case 7: { Console.Write("White"); break; }
-                    }
+                    Console.Write(spiritBlossom[chromaNum]);
                 }
                 oldChroma = chromaNum;                      //assigns last chromaNum value to prevent repeats
             }
-            oldSkin = skinNum;                              //same as above, for all skins (not only for chromas) 
+            oldSkin = skinNum;                              //same as above, for all skins (not only for chromas)
             Console.WriteLine("\n");
         }
 
@@ -921,6 +912,13 @@ namespace League_Randomizer
                 "Adjusted random roll to not include");
             Console.WriteLine("   index 0 and added more comments. Random function now works, and changelog " +
                 "can be called.");
+
+            Console.Write("alpha3: ");
+            Console.WriteLine("Simplified dragonslayer and spiritBlossom by swapping switch statement with " +
+                "array that is called based on roll");
+            Console.WriteLine("   value. String arrays now initialized within champions jagged array, also " +
+                "added null at index 0.");
+
 
             Console.ReadLine();
             Main();
