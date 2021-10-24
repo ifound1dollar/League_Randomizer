@@ -61,14 +61,167 @@ namespace League_Randomizer
 
         static readonly string[][] champions =
         {
-            new string[] { "null" },
-            new string[] { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" },
-            new string[] { "ANNIE", "Annie-versary", "Prom Queen" },
-            new string[] { "TRISTANA", "tristana1", "tristana2", "tristana3" },
-            new string[] { "TWITCH", "tw1", "tw2", "tw3", "tw4" }
+            new string[] { "null" },    //0
+            new string[] { "ALISTAR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ANNIE", "Annie-versary", "Prom Queen" },        ///
+            new string[] { "ASHE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "FIDDLESTICKS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "JAX", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KAYLE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MASTER YI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MORGANA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NUNU & WILLUMP", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RYZE", "tw1", "tw2", "tw3", "tw4" },    //10
+            new string[] { "SION", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SIVIR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SORAKA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TEEMO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TRISTANA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TWISTED FATE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "WARWICK", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SINGED", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ZILEAN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "EVELYNN", "tw1", "tw2", "tw3", "tw4" }, //20
+            new string[] { "TWITCH", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TRYNDAMERE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KARTHUS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "AMUMU", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "CHO'GATH", "Jurassic", "Loch Ness" },           ///
+            new string[] { "ANIVIA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RAMMUS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VEIGAR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KASSADIN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GANGPLANK", "tw1", "tw2", "tw3", "tw4" },   //30
+            new string[] { "TARIC", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "BLITZCRANK", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "DR. MUNDO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "JANNA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MALPHITE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "CORKI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KATARINA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NASUS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "HEIMERDINGER", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SHACO", "tw1", "tw2", "tw3", "tw4" },   //40
+            new string[] { "UDYR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NIDALEE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "POPPY", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GRAGAS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "PANTHEON", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MORDEKAISER", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "EZREAL", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SHEN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KENNEN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GAREN", "tw1", "tw2", "tw3", "tw4" },   //50
+            new string[] { "AKALI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MALZAHAR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "OLAF", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KOG'MAW", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "XIN ZHAO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VLADIMIR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GALIO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "URGOT", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MISS FORTUNE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SONA", "tw1", "tw2", "tw3", "tw4" },    //60
+            new string[] { "SWAIN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LUX", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LEBLANC", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "IRELIA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TRUNDLE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "CASSIOPEIA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "CAITLYN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RENEKTON", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KARMA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "MAOKAI", "tw1", "tw2", "tw3", "tw4" },  //70
+            new string[] { "JARVAN IV", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NOCTURNE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LEE SIN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "BRAND", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RUMBLE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" },  //76
+            new string[] { "ORIANNA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "YORICK", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LEONA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "WUKONG", "tw1", "tw2", "tw3", "tw4" },  //80
+            new string[] { "SKARNER", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TALON", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RIVEN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "XERATH", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GRAVES", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SHYVANA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "FIZZ", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VOLIBEAR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "AHRI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VIKTOR", "tw1", "tw2", "tw3", "tw4" },  //90
+            new string[] { "SEJUANI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ZIGGS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NAUTILUS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "FIORA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LULU", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "HECARIM", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VARUS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "DARIUS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "DRAVEN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "JAYCE", "tw1", "tw2", "tw3", "tw4" },   //100
+            new string[] { "ZYRA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "DIANA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RENGAR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SYNDRA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KHA'ZIX", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ELISE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ZED", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NAMI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "THRESH", "tw1", "tw2", "tw3", "tw4" },  //110
+            new string[] { "QUINN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ZAC", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LISSANDRA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "AATROX", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LUCIAN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "JINX", "Firecracker "},                         ///
+            new string[] { "YASUO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VEL'KOZ", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "BRAUM", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GNAR", "tw1", "tw2", "tw3", "tw4" },    //120
+            new string[] { "AZIR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KALISTA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "REK'SAI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "BARD", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "EKKO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "TAHM KENCH", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KINDRED", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ILLAOI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "JHIN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "AURELION SOL", "tw1", "tw2", "tw3", "tw4" },    //130
+            new string[] { "TALIYAH", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KLED", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "IVERN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "CAMILLE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RAKAN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "XAYAH", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KAYN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ORNN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ZOE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "KAI'SA", "tw1", "tw2", "tw3", "tw4" },  //140
+            new string[] { "PYKE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "NEEKO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SYLAS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "YUUMI", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "QIYANA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SENNA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "APHELIOS", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SETT", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LILLIA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "YONE", "tw1", "tw2", "tw3", "tw4" },    //150
+            new string[] { "SAMIRA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "SERAPHINE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "RELL", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VIEGO", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GWEN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "AKSHAN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VEX", "tw1", "tw2", "tw3", "tw4" },
         };
         #endregion
-        static readonly string appVer = "v0.1.1";
+        static readonly string appVer = "v0.2.0";
 
         static void Main()
         /// Program is focused primarily in Main function, where the while loop is located. Calls other
@@ -98,7 +251,7 @@ namespace League_Randomizer
             if (first)
             {
                 first = false;
-                champNum = 1;
+                champNum = 76;
                 Intro();
                 Console.Clear();
             }
@@ -115,38 +268,38 @@ namespace League_Randomizer
         }
         static void Reply()
         {
-        /// Reply function exists to get the user's input. All conditionals use else if (except for first).
-        /// 
-        /// 'oldChampNum' is reset to equal champNum every time Reply is called. This allows the below if()
-        /// statement to check if the variable was changed inside the 'champions' region.
-        ///
-        /// Displays a prompt and defines a string according to the user's input, casted to lowercase.
-        ///
-        /// Misc region:
-        ///     clear: returns to Main, automatically clearing the screen.
-        ///     changelog: calls Changelog function, which displays changelog and has then returns to Main.
-        ///     help: calls Help function, which displays commands, prompts user and returns to Main.
-        ///     intro/reset: assigns True to 'first' then returns to Main. This allows Intro to be called and 
-        ///         resets champNum to Vayne's corresponding index number.
-        ///     random: rolls champNum using the number of string arrays inside champions (jagged array), then
-        ///         returns to Main.
-        /// 
-        /// Champions region:
-        ///     Checks if user input corresponds with any champion names or numbers. Organized alphbetically to
-        ///     make it readable. If so, changes champNum according to which champion name was input. (More
-        ///     relating to this below)
-        ///     
-        /// Dragonslayer/Spirit Blossom region:
-        ///     Checks if user input corresponds with dragonslayer or spirit blossom. If so, respective booleans
-        ///     are assigned True, which are used in Skin. (More on this summarized in Skin function)
-        ///     
-        /// Invalid region:
-        ///     Checks if user input was more than enter, but did not make any of the above conditionals true.
-        ///     If so, displays an error message and sets 'invalid' boolean to true, which is used in Main
-        ///     (Explained in summary). Marks the end of input conditionals and returns to while loop in Main.
-        ///     
-        /// FINALLY, checks if champNum has changed since the beginning of the Reply function. If so, returns to
-        /// Main; if not, returns to while loop.
+            /// Reply function exists to get the user's input. All conditionals use else if (except for first).
+            /// 
+            /// 'oldChampNum' is reset to equal champNum every time Reply is called. This allows the below if()
+            /// statement to check if the variable was changed inside the 'champions' region.
+            ///
+            /// Displays a prompt and defines a string according to the user's input, casted to lowercase.
+            ///
+            /// Misc region:
+            ///     clear: returns to Main, automatically clearing the screen.
+            ///     changelog: calls Changelog function, which displays changelog and has then returns to Main.
+            ///     help: calls Help function, which displays commands, prompts user and returns to Main.
+            ///     intro/reset: assigns True to 'first' then returns to Main. This allows Intro to be called and 
+            ///         resets champNum to Vayne's corresponding index number.
+            ///     random: rolls champNum using the number of string arrays inside champions (jagged array), then
+            ///         returns to Main.
+            /// 
+            /// Champions region:
+            ///     Checks if user input corresponds with any champion names or numbers. Organized alphbetically to
+            ///     make it readable. If so, changes champNum according to which champion name was input. (More
+            ///     relating to this below)
+            ///     
+            /// Dragonslayer/Spirit Blossom region:
+            ///     Checks if user input corresponds with dragonslayer or spirit blossom. If so, respective booleans
+            ///     are assigned True, which are used in Skin. (More on this summarized in Skin function)
+            ///     
+            /// Invalid region:
+            ///     Checks if user input was more than enter, but did not make any of the above conditionals true.
+            ///     If so, displays an error message and sets 'invalid' boolean to true, which is used in Main
+            ///     (Explained in summary). Marks the end of input conditionals and returns to while loop in Main.
+            ///     
+            /// FINALLY, checks if champNum has changed since the beginning of the Reply function. If so, returns to
+            /// Main; if not, returns to while loop.
             oldChampNum = champNum;
             Console.Write("Press enter to run...");
             string r = Console.ReadLine().ToLower();
@@ -951,7 +1104,7 @@ namespace League_Randomizer
         }
         static void Skin()
         {
-        /// Defines 'length' by getting the Length of the array in champions (jagged array), indexed by champNum;
+            /// Defines 'length' by getting the Length of the array in champions (jagged array), indexed by champNum;
             /// ex. champNum=2 -> 3 objects in Annie (includes first object which is the champion name).
             ///
             /// Rolls skinNum starting at index 1 (0 is the champion's name) and up to length, since that's how many
@@ -981,21 +1134,21 @@ namespace League_Randomizer
             string name = champions[champNum][skinNum];
             Console.Write(name);
 
-        /// Checks if the last character in name is a space using EndsWith method. If it is, the program knows
-        /// that the selected skin has chromas and the colors need to be rolled individually. (See next)
-        ///
-        /// Checks which skin with a chroma was rolled and assigns an array with the chroma colors depending on
-        /// which skin it is.
-        /// ex. Dragonslayer has Green, Red, and Silver (and a blank option so it is able to display the skin
-        /// without a chroma). It then rolls a number and eliminates repeats like above (does not need to check
-        /// for length, though) and displays the chroma color from the array by indexing it according to the
-        /// value of chromaNum.
-        ///
-        /// Assigns the chromaNum value to oldChroma so if the same skin is rolled again (which will only happen
-        /// if the user activates dragonslayer or spiritBlossom), the anti-repeat while loop will run.
-        ///
-        /// FINALLY, assigns the skinNum value to oldSkin to prevent repeats, similar to above with chromas.
-        /// Console.WriteLine ends the line and jumps another line using \n.
+            /// Checks if the last character in name is a space using EndsWith method. If it is, the program knows
+            /// that the selected skin has chromas and the colors need to be rolled individually. (See next)
+            ///
+            /// Checks which skin with a chroma was rolled and assigns an array with the chroma colors depending on
+            /// which skin it is.
+            /// ex. Dragonslayer has Green, Red, and Silver (and a blank option so it is able to display the skin
+            /// without a chroma). It then rolls a number and eliminates repeats like above (does not need to check
+            /// for length, though) and displays the chroma color from the array by indexing it according to the
+            /// value of chromaNum.
+            ///
+            /// Assigns the chromaNum value to oldChroma so if the same skin is rolled again (which will only happen
+            /// if the user activates dragonslayer or spiritBlossom), the anti-repeat while loop will run.
+            ///
+            /// FINALLY, assigns the skinNum value to oldSkin to prevent repeats, similar to above with chromas.
+            /// Console.WriteLine ends the line and jumps another line using \n.
             if (name.EndsWith(' '))
             {
                 if (name == "Dragonslayer ")
@@ -1013,6 +1166,15 @@ namespace League_Randomizer
                     while (chromaNum == oldChroma) { chromaNum = roll.Next(8); }
                     Colors(spiritBlossom[chromaNum]);    //calls Colors() with the string from the array
                     Console.Write(spiritBlossom[chromaNum]);
+                }
+                if (name == "Firecracker ")
+                {
+                    string[] firecracker = { "", "White", "Black", "Light Blue", "Pink", "Orange", "Purple", "Green" };
+                    chromaNum = roll.Next(8);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(8); }
+                    Colors(firecracker[chromaNum]);    //calls Colors() with the string from the array
+                    Console.Write(firecracker[chromaNum]);
+
                 }
                 oldChroma = chromaNum;
             }
@@ -1072,6 +1234,7 @@ namespace League_Randomizer
                 "(09/18/2021) alpha4: ",
                 "(09/18/2021) v0.1.0: ",
                 "(10/21/2021) v0.1.1: ",
+                "(10/24/2021) v0.2.0: ",
             };
             string[] text =
             {
@@ -1088,7 +1251,9 @@ namespace League_Randomizer
                     "longer\n    colossal walls of text; they now use arrays and while loops to change " +
                     "colors and display info. Adjusted input\n    conditionals in misc. region of Reply.",
                 "Removed individual color functions and replaced with Colors() function that takes a string " +
-                    "\nparameter then selects a color based on that."
+                    "\nparameter then selects a color based on that.",
+                "Added filler arrays for every champion, now using correct champion numbers. Colors now " +
+                    "change\nwhen they should (including skins and chromas)."
             };
 
             Console.Clear();
@@ -1154,9 +1319,9 @@ namespace League_Randomizer
         {
             if (color == "Green") { Console.ForegroundColor = ConsoleColor.DarkGreen; }
             else if (color == "LightGreen") { Console.ForegroundColor = ConsoleColor.Green; }
-            else if (color == "Red") { Console.ForegroundColor = ConsoleColor.Red; }
+            else if (color == "Red" || color == "Orange") { Console.ForegroundColor = ConsoleColor.Red; }
             else if (color == "Blue") { Console.ForegroundColor = ConsoleColor.Blue; }
-            else if (color == "Cyan" || color == "Silver") { Console.ForegroundColor = ConsoleColor.Cyan; }
+            else if (color == "Cyan" || color == "Silver" || color == "Light Blue") { Console.ForegroundColor = ConsoleColor.Cyan; }
             else if (color == "Yellow") { Console.ForegroundColor = ConsoleColor.Yellow; }
             else if (color == "Magenta" || color == "Pink") { Console.ForegroundColor = ConsoleColor.Magenta; }
             else if (color == "Purple") { Console.ForegroundColor = ConsoleColor.DarkMagenta; }
