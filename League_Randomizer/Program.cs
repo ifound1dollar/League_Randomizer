@@ -62,68 +62,70 @@ namespace League_Randomizer
         static readonly string[][] champions =
         {
             new string[] { "null" },    //0
-            new string[] { "ALISTAR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ANNIE", "Annie-versary", "Prom Queen" },        ///
-            new string[] { "ASHE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "FIDDLESTICKS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "JAX", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KAYLE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MASTER YI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MORGANA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NUNU & WILLUMP", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RYZE", "tw1", "tw2", "tw3", "tw4" },    //10
-            new string[] { "SION", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SIVIR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SORAKA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TEEMO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TRISTANA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TWISTED FATE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "WARWICK", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SINGED", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ZILEAN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "EVELYNN", "tw1", "tw2", "tw3", "tw4" }, //20
-            new string[] { "TWITCH", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TRYNDAMERE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KARTHUS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "AMUMU", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "CHO'GATH", "Jurassic", "Loch Ness" },           ///
-            new string[] { "ANIVIA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RAMMUS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VEIGAR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KASSADIN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "GANGPLANK", "tw1", "tw2", "tw3", "tw4" },   //30
-            new string[] { "TARIC", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "BLITZCRANK", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "DR. MUNDO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "JANNA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MALPHITE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "CORKI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KATARINA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NASUS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "HEIMERDINGER", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SHACO", "tw1", "tw2", "tw3", "tw4" },   //40
-            new string[] { "UDYR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NIDALEE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "POPPY", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "GRAGAS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "PANTHEON", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MORDEKAISER", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "EZREAL", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SHEN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KENNEN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "GAREN", "tw1", "tw2", "tw3", "tw4" },   //50
-            new string[] { "AKALI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MALZAHAR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "OLAF", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KOG'MAW", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "XIN ZHAO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VLADIMIR", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "ALISTAR", "Default" },                              ///
+            new string[] { "ANNIE", "Annie-versary", "Prom Queen" },            ///
+            new string[] { "ASHE", "Sherwood Forest", "Default" },              ///
+            new string[] { "FIDDLESTICKS", "Fiddle Me Timbers", "Default" },    ///
+            new string[] { "JAX", "Warden", "Default" },                        ///
+            new string[] { "KAYLE", "Riot", "Transcendent (Unmasked)" },        ///
+            new string[] { "MASTER YI", "Default" },                            ///
+            new string[] { "MORGANA", "Ghost Bride", "Blade Mistress" },        ///
+            new string[] { "NUNU & WILLUMP", "Workshop", "Papercraft " },       ///
+            new string[] { "RYZE", "Dark Crystal", "Default" },     //10        ///
+            new string[] { "SION", "Default" },                                 ///
+            new string[] { "SIVIR", "Snowstorm", "Default" },                   ///
+            new string[] { "SORAKA", "Default" },                               ///
+            new string[] { "TEEMO", "Panda", "Default" },                       ///
+            new string[] { "TRISTANA", "Bewitching", "Riot Girl",
+                "Rocket Girl " },                                               ///
+            new string[] { "TWISTED FATE", "Default" },                         ///
+            new string[] { "WARWICK", "Grey " },                                ///
+            new string[] { "SINGED", "Hextech", "Mad Scientist" },              ///
+            new string[] { "ZILEAN", "Default" },                               ///
+            new string[] { "EVELYNN", "Safecracker", "Default" },   //20        ///
+            new string[] { "TWITCH", "Medieval ", "Whistler Village" },         ///
+            new string[] { "TRYNDAMERE", "Default" },                           ///
+            new string[] { "KARTHUS", "Fnatic", "Default" },                    ///
+            new string[] { "AMUMU", "Emumu", "Default" },                       ///
+            new string[] { "CHO'GATH", "Jurassic", "Loch Ness" },               ///
+            new string[] { "ANIVIA", "Blackfrost", "Default" },                 ///
+            new string[] { "RAMMUS", "Default" },                               ///
+            new string[] { "VEIGAR", "White Mage", "Curling",
+                "Superb Villain", "Final Boss" },                               ///
+            new string[] { "KASSADIN", "Default" },                             ///
+            new string[] { "GANGPLANK", "Default" },                //30        ///
+            new string[] { "TARIC", "Default" },                                ///
+            new string[] { "BLITZCRANK", "Boom Boom", "Default" },              ///
+            new string[] { "DR. MUNDO", "Default" },                            ///
+            new string[] { "JANNA", "Default" },                                ///
+            new string[] { "MALPHITE", "Mecha " },                  //35        ///
+            new string[] { "CORKI", "Urfrider", "Default" },                    ///
+            new string[] { "KATARINA", "Kitty Kat", "Default" },                ///
+            new string[] { "NASUS", "Archduke", "Default" },                    ///
+            new string[] { "HEIMERDINGER", "Default" },                         ///
+            new string[] { "SHACO", "Default" },                    //40        ///
+            new string[] { "UDYR", "Default" },                                 ///
+            new string[] { "NIDALEE", "Default" },                              ///
+            new string[] { "POPPY", "Default" },                                ///
+            new string[] { "GRAGAS", "Default" },                               ///
+            new string[] { "PANTHEON", "Default" },                 //45        ///
+            new string[] { "MORDEKAISER", "Default" },                          ///
+            new string[] { "EZREAL", "Pulsefire", "Default" },                  ///
+            new string[] { "SHEN", "Default" },                                 ///
+            new string[] { "KENNEN", "Default" },                               ///
+            new string[] { "GAREN", "Default" },                    //50        ///
+            new string[] { "AKALI", "Blood Moon", "Default" },                  ///
+            new string[] { "MALZAHAR", "Overlord", "Default" },                 ///
+            new string[] { "OLAF", "Default" },                                 ///
+            new string[] { "KOG'MAW", "Reindeer", "Default" },                  ///
+            new string[] { "XIN ZHAO", "Default" },                             ///
+            new string[] { "VLADIMIR", "Blood Lord", "Default" },               ///
             new string[] { "GALIO", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "URGOT", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "MISS FORTUNE", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "SONA", "tw1", "tw2", "tw3", "tw4" },    //60
             new string[] { "SWAIN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LUX", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LUX", "Lunar Empress", "Steel Legion" },            ///
             new string[] { "LEBLANC", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "IRELIA", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "TRUNDLE", "tw1", "tw2", "tw3", "tw4" },
@@ -137,11 +139,14 @@ namespace League_Randomizer
             new string[] { "LEE SIN", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "BRAND", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "RUMBLE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VAYNE", "Vindicator", "Aristocrat", "Dragonslayer ", "Arclight" },  //76
-            new string[] { "ORIANNA", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "VAYNE", "Vindicator", "Aristocrat",
+                "Dragonslayer ", "Heartseeker", "SKT T1", "Arclight",
+                "Soulstealer", "Firecracker Prestige Edition",
+                "Spirit Blossom "},                                 //76        ///
+            new string[] { "ORIANNA", "TPA", "Winter Wonder", "Victorious" },   ///
             new string[] { "YORICK", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "LEONA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "WUKONG", "tw1", "tw2", "tw3", "tw4" },  //80
+            new string[] { "WUKONG", "Lancer Stratus", "Underworld" },  //80    ///
             new string[] { "SKARNER", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "TALON", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "RIVEN", "tw1", "tw2", "tw3", "tw4" },
@@ -176,7 +181,7 @@ namespace League_Randomizer
             new string[] { "ZAC", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "LISSANDRA", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "AATROX", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LUCIAN", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "LUCIAN", "Hired Gun", "Victorious " },          ///
             new string[] { "JINX", "Firecracker "},                         ///
             new string[] { "YASUO", "tw1", "tw2", "tw3", "tw4" },
             new string[] { "VEL'KOZ", "tw1", "tw2", "tw3", "tw4" },
@@ -221,7 +226,7 @@ namespace League_Randomizer
             new string[] { "VEX", "tw1", "tw2", "tw3", "tw4" },
         };
         #endregion
-        static readonly string appVer = "v0.2.0";
+        static readonly string appVer = "v0.2.1";
 
         static void Main()
         /// Program is focused primarily in Main function, where the while loop is located. Calls other
@@ -675,7 +680,7 @@ namespace League_Randomizer
                 || r == "malph"
                 || r == "rock"
                 || r == "mountain"
-                || r == "malphite") { champNum = 20; }
+                || r == "malphite") { champNum = 35; }
             else if (r == "malz"
                 || r == "malza"
                 || r == "press r"
@@ -1149,35 +1154,104 @@ namespace League_Randomizer
             ///
             /// FINALLY, assigns the skinNum value to oldSkin to prevent repeats, similar to above with chromas.
             /// Console.WriteLine ends the line and jumps another line using \n.
-            if (name.EndsWith(' '))
+            if (name.EndsWith(' '))                         //skins with chromas always end with a space
             {
                 if (name == "Dragonslayer ")
                 {
-                    string[] dragonslayer = { "", "Green", "Red", "Silver" };
-                    chromaNum = roll.Next(4);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(4); }
-                    Colors(dragonslayer[chromaNum]);    //calls Colors() with the string from the array
-                    Console.Write(dragonslayer[chromaNum]);
-                }
-                if (name == "Spirit Blossom ")
+                    string[] chroma = { "", "Green", "Red", "Silver" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);    //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]); //prints chroma color after name of skin
+                }   //Dragonslayer Vayne
+                else if (name == "Spirit Blossom ")
                 {
-                    string[] spiritBlossom = { "", "Red", "Yellow", "Green", "Purple", "Pink", "Black", "White" };
-                    chromaNum = roll.Next(8);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(8); }
-                    Colors(spiritBlossom[chromaNum]);    //calls Colors() with the string from the array
-                    Console.Write(spiritBlossom[chromaNum]);
-                }
-                if (name == "Firecracker ")
+                    string[] chroma = { "", "Red", "Yellow", "Green", "Purple", "Pink", "Black", "White" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);       //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);    //prints chroma color after name of skin
+                }   //Spirit Blossom Vayne
+                else if (name == "Firecracker ")
                 {
-                    string[] firecracker = { "", "White", "Black", "Light Blue", "Pink", "Orange", "Purple", "Green" };
-                    chromaNum = roll.Next(8);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(8); }
-                    Colors(firecracker[chromaNum]);    //calls Colors() with the string from the array
-                    Console.Write(firecracker[chromaNum]);
+                    string[] chroma = { "", "White", "Black", "Light Blue", "Pink", "Orange", "Purple", "Green" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
 
-                }
+                }   //Firecracker Jinx
+                else if (name == "Mecha ")
+                {
+                    string[] chroma = { "", "Yellow", "Green", "Black", "Tan", "White", "Blue", "Gray", "Orange" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);               //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);        //prints chroma color after name of skin
+
+                }   //Mecha Malphite
+                else if (name == "Papercraft ")
+                {
+                    string[] chroma = { "", "White", "Light Blue", "Black", "Purple", "Pink", "Yellow" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+
+                }   //Papercraft Nunu & Willump
+                else if (name == "Rocket Girl ")
+                {
+                    string[] chroma = { "", "Blue", "Purple", "Red" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+
+                }   //Rocket Girl Tristana
+                else if (name == "Medieval ")
+                {
+                    string[] chroma = { "", "Purple" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+                }   //Medieval Twitch
+                else if (name == "Grey ")
+                {
+                    string[] chroma = { "", "Blue" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+
+                }   //Grey Warwick
+                else if (name == "Victorious " && champNum == 115)  //Lucian
+                {
+                    string[] chroma = { "", "Green", "Light Blue" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+                }   //Victorious Lucian
+                else if (name == "Victorious " && champNum == 77)   //Orianna
+                {
+                    string[] chroma = { "", "Green" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+                }   //Victorious Orianna
+                else if (name == "Victorious " && champNum == 85)    //Graves
+                {
+                    string[] chroma = { "", "White" };
+                    chromaNum = roll.Next(chroma.Length);
+                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
+                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
+                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+
+                }   //Victorious Graves
                 oldChroma = chromaNum;
-            }
+            }   //CHROMAS
             oldSkin = skinNum;
             Console.ResetColor();
             Console.WriteLine("\n");
@@ -1235,6 +1309,7 @@ namespace League_Randomizer
                 "(09/18/2021) v0.1.0: ",
                 "(10/21/2021) v0.1.1: ",
                 "(10/24/2021) v0.2.0: ",
+                "(10/24/2021) v0.2.1: ",
             };
             string[] text =
             {
@@ -1253,7 +1328,9 @@ namespace League_Randomizer
                 "Removed individual color functions and replaced with Colors() function that takes a string " +
                     "\nparameter then selects a color based on that.",
                 "Added filler arrays for every champion, now using correct champion numbers. Colors now " +
-                    "change\nwhen they should (including skins and chromas)."
+                    "change\nwhen they should (including skins and chromas).",
+                "Added all chromas and begun adding all skins. Change chroma roll to length of array, like " +
+                "it\nalready should have been."
             };
 
             Console.Clear();
@@ -1321,10 +1398,14 @@ namespace League_Randomizer
             else if (color == "LightGreen") { Console.ForegroundColor = ConsoleColor.Green; }
             else if (color == "Red" || color == "Orange") { Console.ForegroundColor = ConsoleColor.Red; }
             else if (color == "Blue") { Console.ForegroundColor = ConsoleColor.Blue; }
-            else if (color == "Cyan" || color == "Silver" || color == "Light Blue") { Console.ForegroundColor = ConsoleColor.Cyan; }
+            else if (color == "Cyan" || color == "Silver" || color == "Light Blue" || color == "Tan")
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            }
             else if (color == "Yellow") { Console.ForegroundColor = ConsoleColor.Yellow; }
             else if (color == "Magenta" || color == "Pink") { Console.ForegroundColor = ConsoleColor.Magenta; }
             else if (color == "Purple") { Console.ForegroundColor = ConsoleColor.DarkMagenta; }
+            else if (color == "Gray") { Console.ForegroundColor = ConsoleColor.Gray; }
             else if (color == "White") { Console.ForegroundColor = ConsoleColor.White; }
             else if (color == "Black") { Console.ForegroundColor = ConsoleColor.DarkGray; }
         }
