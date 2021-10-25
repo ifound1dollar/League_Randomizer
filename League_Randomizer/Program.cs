@@ -51,6 +51,7 @@ namespace League_Randomizer
         static bool invalid;
         static bool dragonslayer;
         static bool spiritBlossom;
+        static bool enableDefaults;
 
         static int champNum;
         static int oldChampNum;
@@ -63,170 +64,178 @@ namespace League_Randomizer
         {
             new string[] { "null" },    //0
             new string[] { "ALISTAR", "Default" },                              ///
-            new string[] { "ANNIE", "Annie-versary", "Prom Queen" },            ///
+            new string[] { "ANNIE", "Annie-versary", "Prom Queen", "Default" }, ///
             new string[] { "ASHE", "Sherwood Forest", "Default" },              ///
             new string[] { "FIDDLESTICKS", "Fiddle Me Timbers", "Default" },    ///
-            new string[] { "JAX", "Warden", "Default" },                        ///
-            new string[] { "KAYLE", "Riot", "Transcendent (Unmasked)" },        ///
+            new string[] { "JAX", "Warden", "Default" },                //5     ///
+            new string[] { "KAYLE", "Riot", "Transcendent (Unmasked)",
+                "Default" },                                                    ///
             new string[] { "MASTER YI", "Default" },                            ///
-            new string[] { "MORGANA", "Ghost Bride", "Blade Mistress" },        ///
-            new string[] { "NUNU & WILLUMP", "Workshop", "Papercraft " },       ///
-            new string[] { "RYZE", "Dark Crystal", "Default" },     //10        ///
+            new string[] { "MORGANA", "Ghost Bride", "Blade Mistress",
+                "Default"},                                                     ///
+            new string[] { "NUNU & WILLUMP", "Workshop", "Papercraft ",
+                "Default" },                                                    ///
+            new string[] { "RYZE", "Dark Crystal", "Default" },         //10    ///
             new string[] { "SION", "Default" },                                 ///
             new string[] { "SIVIR", "Snowstorm", "Default" },                   ///
             new string[] { "SORAKA", "Default" },                               ///
             new string[] { "TEEMO", "Panda", "Default" },                       ///
             new string[] { "TRISTANA", "Bewitching", "Riot Girl",
-                "Rocket Girl " },                                               ///
+                "Rocket Girl ", "Default" },                            //15    ///
             new string[] { "TWISTED FATE", "Default" },                         ///
-            new string[] { "WARWICK", "Grey " },                                ///
-            new string[] { "SINGED", "Hextech", "Mad Scientist" },              ///
+            new string[] { "WARWICK", "Grey ", "Default" },                     ///
+            new string[] { "SINGED", "Hextech", "Mad Scientist", "Default" },   ///
             new string[] { "ZILEAN", "Default" },                               ///
-            new string[] { "EVELYNN", "Safecracker", "Default" },   //20        ///
-            new string[] { "TWITCH", "Medieval ", "Whistler Village" },         ///
+            new string[] { "EVELYNN", "Safecracker", "Default" },       //20    ///
+            new string[] { "TWITCH", "Medieval ", "Whistler Village",
+                "Default" },                                                    ///
             new string[] { "TRYNDAMERE", "Default" },                           ///
             new string[] { "KARTHUS", "Fnatic", "Default" },                    ///
             new string[] { "AMUMU", "Emumu", "Default" },                       ///
-            new string[] { "CHO'GATH", "Jurassic", "Loch Ness" },               ///
+            new string[] { "CHO'GATH", "Jurassic", "Loch Ness",
+                "Default" },                                            //25    ///
             new string[] { "ANIVIA", "Blackfrost", "Default" },                 ///
             new string[] { "RAMMUS", "Default" },                               ///
             new string[] { "VEIGAR", "White Mage", "Curling",
-                "Superb Villain", "Final Boss" },                               ///
+                "Superb Villain", "Final Boss", "Default" },                    ///
             new string[] { "KASSADIN", "Default" },                             ///
-            new string[] { "GANGPLANK", "Default" },                //30        ///
+            new string[] { "GANGPLANK", "Default" },                    //30    ///
             new string[] { "TARIC", "Default" },                                ///
             new string[] { "BLITZCRANK", "Boom Boom", "Default" },              ///
             new string[] { "DR. MUNDO", "Default" },                            ///
             new string[] { "JANNA", "Default" },                                ///
-            new string[] { "MALPHITE", "Mecha " },                  //35        ///
+            new string[] { "MALPHITE", "Mecha ", "Default" },           //35    ///
             new string[] { "CORKI", "Urfrider", "Default" },                    ///
             new string[] { "KATARINA", "Kitty Kat", "Default" },                ///
             new string[] { "NASUS", "Archduke", "Default" },                    ///
             new string[] { "HEIMERDINGER", "Default" },                         ///
-            new string[] { "SHACO", "Default" },                    //40        ///
+            new string[] { "SHACO", "Default" },                        //40    ///
             new string[] { "UDYR", "Default" },                                 ///
             new string[] { "NIDALEE", "Default" },                              ///
             new string[] { "POPPY", "Default" },                                ///
             new string[] { "GRAGAS", "Default" },                               ///
-            new string[] { "PANTHEON", "Default" },                 //45        ///
+            new string[] { "PANTHEON", "Default" },                     //45    ///
             new string[] { "MORDEKAISER", "Default" },                          ///
             new string[] { "EZREAL", "Pulsefire", "Default" },                  ///
             new string[] { "SHEN", "Default" },                                 ///
             new string[] { "KENNEN", "Default" },                               ///
-            new string[] { "GAREN", "Default" },                    //50        ///
+            new string[] { "GAREN", "Default" },                        //50    ///
             new string[] { "AKALI", "Blood Moon", "Default" },                  ///
             new string[] { "MALZAHAR", "Overlord", "Default" },                 ///
             new string[] { "OLAF", "Default" },                                 ///
             new string[] { "KOG'MAW", "Reindeer", "Default" },                  ///
-            new string[] { "XIN ZHAO", "Default" },                             ///
+            new string[] { "XIN ZHAO", "Default" },                     //55    ///
             new string[] { "VLADIMIR", "Blood Lord", "Default" },               ///
-            new string[] { "GALIO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "URGOT", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MISS FORTUNE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SONA", "tw1", "tw2", "tw3", "tw4" },    //60
-            new string[] { "SWAIN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LUX", "Lunar Empress", "Steel Legion" },            ///
-            new string[] { "LEBLANC", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "IRELIA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TRUNDLE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "CASSIOPEIA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "CAITLYN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RENEKTON", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KARMA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "MAOKAI", "tw1", "tw2", "tw3", "tw4" },  //70
-            new string[] { "JARVAN IV", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NOCTURNE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LEE SIN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "BRAND", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RUMBLE", "tw1", "tw2", "tw3", "tw4" },
+            new string[] { "GALIO", "Default" },                                ///
+            new string[] { "URGOT", "Default" },                                ///
+            new string[] { "MISS FORTUNE", "Pool Party", "Default" },           ///
+            new string[] { "SONA", "Sweetheart", "Default" },           //60    ///
+            new string[] { "SWAIN", "Default" },                                ///
+            new string[] { "LUX", "Lunar Empress", "Steel Legion", "Default" }, ///
+            new string[] { "LEBLANC", "Default" },                              ///
+            new string[] { "IRELIA", "Default" },                               ///
+            new string[] { "TRUNDLE", "Default" },                      //65    ///
+            new string[] { "CASSIOPEIA", "Default" },                           ///
+            new string[] { "CAITLYN", "Safari", "Default" },                    ///
+            new string[] { "RENEKTON", "SKT T1", "Default" },                   ///
+            new string[] { "KARMA", "Default" },                                ///
+            new string[] { "MAOKAI", "Victorious", "Default" },         //70    ///
+            new string[] { "JARVAN IV", "Default" },                            ///
+            new string[] { "NOCTURNE", "Void", "Default" },                     ///
+            new string[] { "LEE SIN", "Default" },                              ///
+            new string[] { "BRAND", "Vandal", "Default" },                      ///
+            new string[] { "RUMBLE", "Default" },                       //75    ///
             new string[] { "VAYNE", "Vindicator", "Aristocrat",
                 "Dragonslayer ", "Heartseeker", "SKT T1", "Arclight",
                 "Soulstealer", "Firecracker Prestige Edition",
-                "Spirit Blossom "},                                 //76        ///
-            new string[] { "ORIANNA", "TPA", "Winter Wonder", "Victorious" },   ///
-            new string[] { "YORICK", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LEONA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "WUKONG", "Lancer Stratus", "Underworld" },  //80    ///
-            new string[] { "SKARNER", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TALON", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RIVEN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "XERATH", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "GRAVES", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SHYVANA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "FIZZ", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VOLIBEAR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "AHRI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VIKTOR", "tw1", "tw2", "tw3", "tw4" },  //90
-            new string[] { "SEJUANI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ZIGGS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NAUTILUS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "FIORA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LULU", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "HECARIM", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VARUS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "DARIUS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "DRAVEN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "JAYCE", "tw1", "tw2", "tw3", "tw4" },   //100
-            new string[] { "ZYRA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "DIANA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RENGAR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SYNDRA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KHA'ZIX", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ELISE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ZED", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NAMI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "THRESH", "tw1", "tw2", "tw3", "tw4" },  //110
-            new string[] { "QUINN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ZAC", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LISSANDRA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "AATROX", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LUCIAN", "Hired Gun", "Victorious " },          ///
-            new string[] { "JINX", "Firecracker "},                         ///
-            new string[] { "YASUO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VEL'KOZ", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "BRAUM", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "GNAR", "tw1", "tw2", "tw3", "tw4" },    //120
-            new string[] { "AZIR", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KALISTA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "REK'SAI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "BARD", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "EKKO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "TAHM KENCH", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KINDRED", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ILLAOI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "JHIN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "AURELION SOL", "tw1", "tw2", "tw3", "tw4" },    //130
-            new string[] { "TALIYAH", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KLED", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "IVERN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "CAMILLE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RAKAN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "XAYAH", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KAYN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ORNN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "ZOE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "KAI'SA", "tw1", "tw2", "tw3", "tw4" },  //140
-            new string[] { "PYKE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "NEEKO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SYLAS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "YUUMI", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "QIYANA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SENNA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "APHELIOS", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SETT", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "LILLIA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "YONE", "tw1", "tw2", "tw3", "tw4" },    //150
-            new string[] { "SAMIRA", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "SERAPHINE", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "RELL", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VIEGO", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "GWEN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "AKSHAN", "tw1", "tw2", "tw3", "tw4" },
-            new string[] { "VEX", "tw1", "tw2", "tw3", "tw4" },
+                "Spirit Blossom ", "Default" },                     //76        ///
+            new string[] { "ORIANNA", "TPA", "Winter Wonder", "Victorious",
+                "Default" },                                                    ///
+            new string[] { "YORICK", "Default" },                               ///
+            new string[] { "LEONA", "Default" },                                ///
+            new string[] { "WUKONG", "Lancer Stratus", "Underworld",
+                "Default" },                                            //80    ///
+            new string[] { "SKARNER", "Default" },                              ///
+            new string[] { "TALON", "Default" },                                ///
+            new string[] { "RIVEN", "Arcade", "Default" },                      ///
+            new string[] { "XERATH", "Default" },                               ///
+            new string[] { "GRAVES", "Victorious ", "Default" },        //85    ///
+            new string[] { "SHYVANA", "Default" },                              ///
+            new string[] { "FIZZ", "Atlantean", "Default" },                    ///
+            new string[] { "VOLIBEAR", "Thousand-Pierced Bear", "Default" },    ///
+            new string[] { "AHRI", "Default" },                                 ///
+            new string[] { "VIKTOR", "Default" },                       //90    ///
+            new string[] { "SEJUANI", "Firecracker", "Default" },               ///
+            new string[] { "ZIGGS", "Master Arcanist", "Default" },             ///
+            new string[] { "NAUTILUS", "Default" },                             ///
+            new string[] { "FIORA", "Default" },                                ///
+            new string[] { "LULU", "Pool Party", "Default" },           //95    ///
+            new string[] { "HECARIM", "Default" },                              ///
+            new string[] { "VARUS", "Arclight", "Default" },                    ///
+            new string[] { "DARIUS", "Default" },                               ///
+            new string[] { "DRAVEN", "Default" },                               ///
+            new string[] { "JAYCE", "Forsaken", "Default" },            //100   ///
+            new string[] { "ZYRA", "Default" },                                 ///
+            new string[] { "DIANA", "Default" },                                ///
+            new string[] { "RENGAR", "Default" },                               ///
+            new string[] { "SYNDRA", "Snow Day", "Default" },                   ///
+            new string[] { "KHA'ZIX", "Default" },                      //105   ///
+            new string[] { "ELISE", "Default" },                                ///
+            new string[] { "ZED", "Default" },                                  ///
+            new string[] { "NAMI", "Default" },                                 ///
+            new string[] { "VI", "Default" },                                   ///
+            new string[] { "THRESH", "SSW", "Default" },                //110   ///
+            new string[] { "QUINN", "Phoenix", "Default" },                     ///
+            new string[] { "ZAC", "Default" },                                  ///
+            new string[] { "LISSANDRA", "Default" },                            ///
+            new string[] { "AATROX", "Victorious", "Default" },                 ///
+            new string[] { "LUCIAN", "Hired Gun", "Victorious ",
+                "Default" },                                            //115   ///
+            new string[] { "JINX", "Firecracker ", "Default" },                 ///
+            new string[] { "YASUO", "Battle Boss", "Default" },                 ///
+            new string[] { "VEL'KOZ", "Default" },                              ///
+            new string[] { "BRAUM", "Santa", "Default" },                       ///
+            new string[] { "GNAR", "Default" },                         //120   ///
+            new string[] { "AZIR", "Default" },                                 ///
+            new string[] { "KALISTA", "Blood Moon", "Default" },                ///
+            new string[] { "REK'SAI", "Default" },                              ///
+            new string[] { "BARD", "Default" },                                 ///
+            new string[] { "EKKO", "Default" },                         //125   ///
+            new string[] { "TAHM KENCH", "Default" },                           ///
+            new string[] { "KINDRED", "Default" },                              ///
+            new string[] { "ILLAOI", "Default" },                               ///
+            new string[] { "JHIN", "Default" },                                 ///
+            new string[] { "AURELION SOL", "Mecha", "Default" },        //130   ///
+            new string[] { "TALIYAH", "Default" },                              ///
+            new string[] { "KLED", "Default" },                                 ///
+            new string[] { "IVERN", "Default" },                                ///
+            new string[] { "CAMILLE", "Default" },                              ///
+            new string[] { "RAKAN", "Default" },                        //135   ///
+            new string[] { "XAYAH", "Star Guardian", "Default" },               ///
+            new string[] { "KAYN", "Default" },                                 ///
+            new string[] { "ORNN", "Default" },                                 ///
+            new string[] { "ZOE", "Default" },                                  ///
+            new string[] { "KAI'SA", "K/DA", "Default" },               //140   ///
+            new string[] { "PYKE", "Default" },                                 ///
+            new string[] { "NEEKO", "Default" },                                ///
+            new string[] { "SYLAS", "Lunar Wraith", "Default" },                ///
+            new string[] { "YUUMI", "Default" },                                ///
+            new string[] { "QIYANA", "Default" },                       //145   ///
+            new string[] { "SENNA", "Default" },                                ///
+            new string[] { "APHELIOS", "Default" },                             ///
+            new string[] { "SETT", "Default" },                                 ///
+            new string[] { "LILLIA", "Default" },                               ///
+            new string[] { "YONE", "Default" },                         //150   ///
+            new string[] { "SAMIRA", "Default" },                               ///
+            new string[] { "SERAPHINE", "Default" },                            ///
+            new string[] { "RELL", "Default" },                                 ///
+            new string[] { "VIEGO", "Default" },                                ///
+            new string[] { "GWEN", "Default" },                         //155   ///
+            new string[] { "AKSHAN", "Default" },                               ///
+            new string[] { "VEX", "Default" },                                  ///
         };
         #endregion
-        static readonly string appVer = "v0.2.1";
+        static readonly string appVer = "v0.3.0";
 
         static void Main()
         /// Program is focused primarily in Main function, where the while loop is located. Calls other
@@ -253,6 +262,7 @@ namespace League_Randomizer
         /// loop, reaches the end and returns to the top. Rinse and repeat.
         {
             Console.Clear();
+            Console.ResetColor();
             if (first)
             {
                 first = false;
@@ -262,8 +272,8 @@ namespace League_Randomizer
             }
             oldSkin = oldChroma = -1;
             Console.WriteLine("League Randomizer " + appVer);
-            Console.WriteLine(champions[champNum][0]);
-            Console.WriteLine(champNum);
+            Console.WriteLine("Default skins enabled: " + enableDefaults);
+            Console.WriteLine("{0} {1}\n", champions[champNum][0], champNum);
             while (!false)
             {
                 Reply();
@@ -327,6 +337,22 @@ namespace League_Randomizer
             {
                 champNum = roll.Next(champions.Length);
                 Main();
+            }
+            else if (r == "def" || r == "default")
+            {
+                Console.Clear();
+                string temp;
+                if (!enableDefaults) { temp = "Enable"; }
+                else { temp = "Disable"; }
+                Colors("Yellow");
+                Console.WriteLine("{0} defaults? Press 'Y' or 'N'", temp);  //uses temp var to say "Enable" or "Disable"
+                var reply = Console.ReadKey().Key;
+                if (reply == ConsoleKey.Y)                              //if user hits 'Y' key
+                {
+                    if (!enableDefaults) { enableDefaults = true; }     //if currently DISABLED, enable
+                    else { enableDefaults = false; }                    //if currently ENABLED, disable
+                }
+                Main();                                             //call Main to reset
             }
             #endregion
             #region champions
@@ -1127,12 +1153,29 @@ namespace League_Randomizer
             /// Defines 'name' by locating the string inside of champions (jagged array), using champNum to index
             /// which array (champion) to select then skinNum to index which string (skin) to select.
             /// ex. champNum=76 & skinNum=2 -> Aristocrat
-            Colors("LightGreen");   //change color to green right away
+            Colors("LightGreen");                           //change color to green right away
             int length = champions[champNum].Length;
-            skinNum = roll.Next(1, length);
-            while ((skinNum == oldSkin) && (length > 2))
+            if (enableDefaults)     ///if defaults are ENABLED
             {
-                skinNum = roll.Next(1, length);
+                skinNum = roll.Next(1, length);     //ALWAYS roll WITH final entry: 'Default' since they're enabled
+                if (length > 2)         ///if there are more than ONLY 'Default'
+                {
+                    while (skinNum == oldSkin)
+                    {
+                        skinNum = roll.Next(1, length);     //DO run anti-repeat since there is a skin AND default
+                    }
+                }
+            }
+            else
+            {
+                skinNum = roll.Next(1, length - 1); //ALWAYS roll WITHOUT final entry: 'Default' since they're disabled
+                if (length > 3)         ///if there are more than just ONE skin and 'Default'
+                {
+                    while (skinNum == oldSkin)
+                    {
+                        skinNum = roll.Next(1, length - 1); //DO run anti-repeat since there are two skins even with defaults disabled
+                    }
+                }
             }
             if (dragonslayer) { dragonslayer = false; skinNum = 3; }
             if (spiritBlossom) { spiritBlossom = false; skinNum = 9; }
@@ -1156,101 +1199,60 @@ namespace League_Randomizer
             /// Console.WriteLine ends the line and jumps another line using \n.
             if (name.EndsWith(' '))                         //skins with chromas always end with a space
             {
+                string[] sk = { "", "null" };
                 if (name == "Dragonslayer ")
                 {
                     string[] chroma = { "", "Green", "Red", "Silver" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);    //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]); //prints chroma color after name of skin
+                    sk = chroma;
                 }   //Dragonslayer Vayne
                 else if (name == "Spirit Blossom ")
                 {
                     string[] chroma = { "", "Red", "Yellow", "Green", "Purple", "Pink", "Black", "White" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);       //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);    //prints chroma color after name of skin
+                    sk = chroma;
                 }   //Spirit Blossom Vayne
                 else if (name == "Firecracker ")
                 {
                     string[] chroma = { "", "White", "Black", "Light Blue", "Pink", "Orange", "Purple", "Green" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
-
+                    sk = chroma;
                 }   //Firecracker Jinx
                 else if (name == "Mecha ")
                 {
                     string[] chroma = { "", "Yellow", "Green", "Black", "Tan", "White", "Blue", "Gray", "Orange" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);               //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);        //prints chroma color after name of skin
-
+                    sk = chroma;
                 }   //Mecha Malphite
                 else if (name == "Papercraft ")
                 {
                     string[] chroma = { "", "White", "Light Blue", "Black", "Purple", "Pink", "Yellow" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
-
+                    sk = chroma;
                 }   //Papercraft Nunu & Willump
                 else if (name == "Rocket Girl ")
                 {
                     string[] chroma = { "", "Blue", "Purple", "Red" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
-
+                    sk = chroma;
                 }   //Rocket Girl Tristana
                 else if (name == "Medieval ")
                 {
                     string[] chroma = { "", "Purple" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+                    sk = chroma;
                 }   //Medieval Twitch
                 else if (name == "Grey ")
                 {
                     string[] chroma = { "", "Blue" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
-
+                    sk = chroma;
                 }   //Grey Warwick
-                else if (name == "Victorious " && champNum == 115)  //Lucian
+                else if (name == "Victorious ")
                 {
-                    string[] chroma = { "", "Green", "Light Blue" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
-                }   //Victorious Lucian
-                else if (name == "Victorious " && champNum == 77)   //Orianna
-                {
-                    string[] chroma = { "", "Green" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
-                }   //Victorious Orianna
-                else if (name == "Victorious " && champNum == 85)    //Graves
-                {
-                    string[] chroma = { "", "White" };
-                    chromaNum = roll.Next(chroma.Length);
-                    while (chromaNum == oldChroma) { chromaNum = roll.Next(chroma.Length); }
-                    Colors(chroma[chromaNum]);         //calls Colors() with the string from the array
-                    Console.Write(chroma[chromaNum]);  //prints chroma color after name of skin
+                    if (champNum == 77) { string[] chroma = { "", "Green" }; sk = chroma; }         //Orianna
+                    else if (champNum == 85) { string[] chroma = { "", "White" }; sk = chroma; }    //Graves
+                    else if (champNum == 115) { string[] chroma = { "", "Green", "Light Blue" };    //Lucian
+                        sk = chroma; }
+                }   //Victorious Orianna, Graves, Lucian
 
-                }   //Victorious Graves
-                oldChroma = chromaNum;
+                chromaNum = roll.Next(sk.Length);
+                while (chromaNum == oldChroma) { chromaNum = roll.Next(sk.Length); }
+                Colors(sk[chromaNum]);                  //calls Colors() with the string from the array
+                Console.Write(sk[chromaNum]);           //prints chroma color after name of skin
+                oldChroma = chromaNum;                  //stores current chroma value to prevent repeats next time
             }   //CHROMAS
             oldSkin = skinNum;
             Console.ResetColor();
@@ -1308,8 +1310,9 @@ namespace League_Randomizer
                 "(09/18/2021) alpha4: ",
                 "(09/18/2021) v0.1.0: ",
                 "(10/21/2021) v0.1.1: ",
-                "(10/24/2021) v0.2.0: ",
+                "(10/23/2021) v0.2.0: ",
                 "(10/24/2021) v0.2.1: ",
+                "(10/24/2021) v0.3.0: ",
             };
             string[] text =
             {
@@ -1330,7 +1333,9 @@ namespace League_Randomizer
                 "Added filler arrays for every champion, now using correct champion numbers. Colors now " +
                     "change\nwhen they should (including skins and chromas).",
                 "Added all chromas and begun adding all skins. Change chroma roll to length of array, like " +
-                "it\nalready should have been."
+                    "it\nalready should have been.",
+                "Finished implementing correct skins. Eliminated redundancy when rolling/displaying chromas. " +
+                    "added\noption to disable defaults on champions with 1 or more skins owned."
             };
 
             Console.Clear();
@@ -1339,7 +1344,7 @@ namespace League_Randomizer
             while (ver < versions.Length)
             {
                 Colors("Cyan");
-                Console.Write(string.Format("\n {0, -21}", versions[ver]));
+                Console.Write(string.Format(" {0, -21}", versions[ver]));
                 Colors("White");
                 Console.WriteLine(text[ver]);
                 ver++;
