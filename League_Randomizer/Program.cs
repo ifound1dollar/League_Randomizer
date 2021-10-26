@@ -132,7 +132,7 @@ namespace League_Randomizer
             new string[] { "SONA", "Sweetheart", "Default" },           //60    ///
             new string[] { "SWAIN", "Default" },                                ///
             new string[] { "LUX", "Lunar Empress", "Steel Legion", "Default" }, ///
-            new string[] { "LEBLANC", "Default" },                              ///
+            new string[] { "LEBLANC", "Coven", "Default" },                     ///
             new string[] { "IRELIA", "Default" },                               ///
             new string[] { "TRUNDLE", "Default" },                      //65    ///
             new string[] { "CASSIOPEIA", "Default" },                           ///
@@ -183,7 +183,7 @@ namespace League_Randomizer
             new string[] { "ELISE", "Default" },                                ///
             new string[] { "ZED", "Default" },                                  ///
             new string[] { "NAMI", "Default" },                                 ///
-            new string[] { "VI", "Default" },                                   ///
+            new string[] { "VI", "Project", "Default" },                        ///
             new string[] { "THRESH", "SSW", "Default" },                //110   ///
             new string[] { "QUINN", "Phoenix", "Default" },                     ///
             new string[] { "ZAC", "Default" },                                  ///
@@ -235,7 +235,7 @@ namespace League_Randomizer
             new string[] { "VEX", "Default" },                                  ///
         };
         #endregion
-        static readonly string appVer = "v0.3.0";
+        static readonly string appVer = "v0.3.1";
 
         static void Main()
         /// Program is focused primarily in Main function, where the while loop is located. Calls other
@@ -1317,6 +1317,7 @@ namespace League_Randomizer
                 "(10/23/2021) v0.2.0: ",
                 "(10/24/2021) v0.2.1: ",
                 "(10/24/2021) v0.3.0: ",
+                "(10/26/2021) v0.3.1: ",
             };
             string[] text =
             {
@@ -1339,7 +1340,8 @@ namespace League_Randomizer
                 "Added all chromas and begun adding all skins. Change chroma roll to length of array, like " +
                     "it\nalready should have been.",
                 "Finished implementing correct skins. Eliminated redundancy when rolling/displaying chromas. " +
-                    "added\noption to disable defaults on champions with 1 or more skins owned."
+                    "added\noption to disable defaults on champions with 1 or more skins owned.",
+                "Added Coven LeBlanc and Project Vi."
             };
 
             Console.Clear();
