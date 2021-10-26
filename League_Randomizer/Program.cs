@@ -143,7 +143,7 @@ namespace League_Randomizer
             new string[] { "MAOKAI", "Victorious", "Default" },         //70    ///
             new string[] { "JARVAN IV", "Default" },                            ///
             new string[] { "NOCTURNE", "Void", "Default" },                     ///
-            new string[] { "LEE SIN", "Default" },                              ///
+            new string[] { "LEE SIN", "Playmaker", "Default" },                 ///
             new string[] { "BRAND", "Vandal", "Default" },                      ///
             new string[] { "RUMBLE", "Default" },                       //75    ///
             new string[] { "VAYNE", "Vindicator", "Aristocrat",
@@ -1342,7 +1342,8 @@ namespace League_Randomizer
                     "it\nalready should have been.",
                 "Finished implementing correct skins. Eliminated redundancy when rolling/displaying chromas. " +
                     "added\noption to disable defaults on champions with 1 or more skins owned.",
-                "Added Coven LeBlanc, Project Vi, Subterranian Nautilus, and Surprise Party Fiddlesticks."
+                "Added Coven LeBlanc, Project Vi, Subterranian Nautilus, Surprise Party Fiddlesticks, and " +
+                    "Playmaker Lee Sin."
             };
 
             Console.Clear();
