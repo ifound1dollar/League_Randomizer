@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace League_Randomizer
 {
@@ -63,7 +64,7 @@ namespace League_Randomizer
 
         static readonly List<string[]> champions = new();
         #endregion
-        static readonly string appVer = "v0.3.1";
+        static readonly string appVer = "v0.4.1";
         static void Champions()
         {
             string path = @"C:\Users\Tanner\Documents\Visual Studio 2019\Projects\League_Randomizer\League_Randomizer\champions.txt";
@@ -203,6 +204,11 @@ namespace League_Randomizer
                     else { enableDefaults = false; }                    //if currently ENABLED, disable
                 }
                 Main();                                             //call Main to reset
+            }
+            else if (r == "list")
+            {
+                List();                                         //call list function
+                Main();                                         //return to main
             }
             #endregion
             #region champions
@@ -1138,6 +1144,36 @@ namespace League_Randomizer
             Console.Write(begin);
             Console.ReadKey();
         }
+        static void List()
+        {
+            for (int i = 1; i < champions.Count; i++)       //for ever champion (string array) in list
+            {
+                Console.WriteLine("{0,3} {1}", champions[i][0], champions[i][1]);   //displays index 0 (number) and index 1 (name)
+            }
+            Console.Write("\nType 'a' for alphabetical or press enter to return...");
+            string r = Console.ReadLine().ToLower();
+            if (r == "a")               ///allows user to type 'a' to sort alphabetically
+            {
+                List<string> names = new();                 //create new temporary list for names
+                for (int i = 1; i < champions.Count; i++)   //for every name in list
+                {
+                    names.Add(champions[i][1]);             //add the first index (name) of each array
+                }
+                names.Sort();                               //sort the new list alphabetically
+                foreach (string word in names)              //for each string in list 'names'
+                {
+                    for (int i = 1; i < champions.Count; i++)   //go through every array in 'champions' list to find what index the name in 'names' is at
+                    {
+                        if (champions[i].Contains(word))        //as soon as a match is found
+                        {
+                            Console.WriteLine("{0, 3} {1}", champions[i][0], word); //write the number (that was just found) and the word (name)
+                        }
+                    }
+                }
+                Console.Write("\nPress enter to return...");
+                Console.ReadLine();
+            }
+        }
         static void Changelog()
         /// Simple changelog that can be accessed when user enters c (among other inputs).
         ///
@@ -1168,6 +1204,8 @@ namespace League_Randomizer
                 "(10/24/2021) v0.2.1: ",
                 "(10/24/2021) v0.3.0: ",
                 "(10/26/2021) v0.3.1: ",
+                "(10/29/2021) v0.4.0: ",
+                "(10/29/2021) v0.4.1: ",
             };
             string[] text =
             {
@@ -1192,7 +1230,10 @@ namespace League_Randomizer
                 "Finished implementing correct skins. Eliminated redundancy when rolling/displaying chromas. " +
                     "added\noption to disable defaults on champions with 1 or more skins owned.",
                 "Added Coven LeBlanc, Project Vi, Subterranian Nautilus, Surprise Party Fiddlesticks, and " +
-                    "Playmaker Lee Sin."
+                    "Playmaker Lee Sin.",
+                "List of champions and skins now pulls data from .txt file. Soon will be able to update in-" +
+                    "app.",
+                "'List' function now exists with both numeric and alphabetical organization.",
             };
 
             Console.Clear();
