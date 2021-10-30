@@ -64,7 +64,7 @@ namespace League_Randomizer
 
         static readonly List<string[]> champions = new();
         #endregion
-        static readonly string appVer = "v0.4.1";
+        static readonly string appVer = "v0.4.2";
         static void Champions()
         {
             string path = @"C:\Users\Tanner\Documents\Visual Studio 2019\Projects\League_Randomizer\League_Randomizer\champions.txt";
@@ -85,6 +85,101 @@ namespace League_Randomizer
                 Console.WriteLine("champions.txt could not be read:");
                 Console.WriteLine(e.Message);
             }
+        }
+        static void Update()
+        {
+            Console.Clear();
+            Colors("Yellow");
+            Console.Write("What would you like to update? Enter 'champion', 'skin', or 'chroma'...");
+            Console.ResetColor();
+            string r = Console.ReadLine().ToLower();
+            if (r == "champion")
+            {
+                Console.WriteLine("Enter name of champion to update:");
+                string updateChamp = Console.ReadLine();
+                Console.WriteLine("What would you like to update with {0}? Enter 'add', 'delete', or 'edit'...",
+                    updateChamp);
+                r = Console.ReadLine().ToLower();
+                if (r == "add")
+                {
+                    bool exists = false;
+                    for (int i = 0; i < champions.Count; i++)   //for each string[] in champions list
+                    {
+                        if (champions[i].Contains(updateChamp.ToUpper())) //if there is already a champion with this name
+                        {
+                            Console.Write("\n{0} found as existing champion. Exiting update screen.",
+                                updateChamp);
+                            exists = true;
+                            Console.ReadLine();
+                        }
+                    }
+                    if (!exists)
+                    {
+                        Console.WriteLine("{0} not found as existing champion.\nDrafting new champion to " +
+                            "with champNum = {1} and Default skin.\nConfirm append to end of list?",
+                            updateChamp, champions.Count + 1);
+                        string[] newData =                  //create new string[] to be appended
+                        {
+                            (champions.Count).ToString(),   //equal to one more than the index at end of list (starts at 1)
+                            updateChamp.ToUpper(),          //name of champion, capitalized
+                            "Default"                       //default skin for starters
+                        };
+                        r = Console.ReadLine().ToLower();
+                        if (r == "y" || r == "yes")
+                        {
+                            Console.WriteLine("Appended {0} to champions list.", updateChamp.ToUpper());
+                            champions.Add(newData);         //append new string[] to list
+                        }
+                        else
+                        {
+                            Console.WriteLine("Did not add new champion to list.");
+                        }
+                        Console.ReadLine();
+                    }
+                }
+                else if (r == "delete")
+                {
+                    Console.Write("\nCan only delete last champion in list; last champion in list is " +
+                        "currently {0}. Are you sure you want to delete?\nThis cannot be undone.",
+                        champions[champions.Count - 1][1]);
+                    r = Console.ReadLine().ToLower();
+                    if (r == "y" || r == "yes")
+                    {
+                        Console.WriteLine("Removed {0} from list of champions.",
+                            champions[champions.Count - 1][1]);
+                        champions.RemoveAt(champions.Count - 1);    //remove string[] at final index
+                    }
+                    else
+                    {
+                        Console.WriteLine("Did not remove.");
+                    }
+                    Console.ReadLine();
+                }
+                else if (r == "edit")
+                {
+                    Console.WriteLine("WIP");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input, exiting update screen.");
+                    Console.ReadLine();
+                }
+            }
+            else if (r == "skin")
+            {
+                Console.WriteLine("WIP");
+                Console.ReadLine();
+            }
+            else if (r == "chroma")
+            {
+                Console.WriteLine("WIP");
+                Console.ReadLine();
+            }
+        }
+        static void Write()
+        {
+
         }
 
         static void Main()
@@ -209,6 +304,11 @@ namespace League_Randomizer
             {
                 List();                                         //call list function
                 Main();                                         //return to main
+            }
+            else if (r == "update")
+            {
+                Update();
+                Main();
             }
             #endregion
             #region champions
@@ -1206,6 +1306,7 @@ namespace League_Randomizer
                 "(10/26/2021) v0.3.1: ",
                 "(10/29/2021) v0.4.0: ",
                 "(10/29/2021) v0.4.1: ",
+                "(10/30/2021) v0.4.2: ",
             };
             string[] text =
             {
@@ -1234,6 +1335,7 @@ namespace League_Randomizer
                 "List of champions and skins now pulls data from .txt file. Soon will be able to update in-" +
                     "app.",
                 "'List' function now exists with both numeric and alphabetical organization.",
+                "Started creation of update function.",
             };
 
             Console.Clear();
