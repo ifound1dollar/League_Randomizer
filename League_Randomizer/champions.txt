@@ -45,7 +45,7 @@
 44,GRAGAS,Default
 45,PANTHEON,Default
 46,MORDEKAISER,Default
-47,EZREAL,Default,Pulsefire
+47,EZREAL,Default,Pulsefire,Frosted
 48,SHEN,Default
 49,KENNEN,Default
 50,GAREN,Default
@@ -98,7 +98,7 @@
 97,VARUS,Default,Arclight
 98,DARIUS,Default
 99,DRAVEN,Default
-100,JAYCE,Default,Forsaken
+100,JAYCE,Default,Forsaken,Arcane
 101,ZYRA,Default
 102,DIANA,Default
 103,RENGAR,Default
@@ -141,7 +141,7 @@
 140,KAI'SA,Default,K/DA
 141,PYKE,Default
 142,NEEKO,Default
-143,SYLAS,Default,Lunar Wraith
+143,SYLAS,Default,Lunar Wraith,Project
 144,YUUMI,Default
 145,QIYANA,Default
 146,SENNA,Default
@@ -155,4 +155,4 @@
 154,VIEGO,Default
 155,GWEN,Default
 156,AKSHAN,Default
-157,VEX,Default,BOOBA
+157,VEX,Default

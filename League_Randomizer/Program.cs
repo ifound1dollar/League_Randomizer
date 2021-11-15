@@ -65,7 +65,7 @@ namespace League_Randomizer
 
         static readonly List<string[]> champions = new();
         #endregion
-        static readonly string appVer = "v0.4.2";
+        static readonly string appVer = "v1.0.1";
         static void Champions()
         {
             try
@@ -99,7 +99,7 @@ namespace League_Randomizer
                     sw.Write(champ[champ.Length - 1]);      //write last instance of array WITHOUT a comma
                     sw.WriteLine("");                       //end line to begin next
                 }
-                Console.WriteLine("Wrote changes to file: champions.txt");
+                Console.WriteLine("\nWrote changes to file: champions.txt");
                 Console.ReadLine();
                 sw.Close();
             }
@@ -136,6 +136,7 @@ namespace League_Randomizer
                 Console.ResetColor();
                 Console.ReadLine();
             }
+            Main();
         }
         static void UpdateChamp()
         {
@@ -273,7 +274,7 @@ namespace League_Randomizer
                         Colors("Magenta");
                         Console.Write(tempSkin);
                         Console.ResetColor();
-                        Console.Write(" If this is correct, do you want to add " +
+                        Console.Write(". If this is correct, do you want to add " +
                             "to list of skins?");           //confirm that user wants to add
                         Colors("Green");
                         r = Console.ReadLine().ToLower();
@@ -318,12 +319,12 @@ namespace League_Randomizer
                     if (r == "y" || r == "yes")
                     {
                         List<string> tempList = new();
-                        for (int i = 0; i < champions[tempChampNum].Length - 2; i++)
+                        for (int i = 0; i < champions[tempChampNum].Length - 1; i++)
                         {
                             tempList.Add(champions[tempChampNum][i]);   //add all strings EXCEPT the last to new tempList
                         }
                         Colors("Yellow");
-                        Console.WriteLine("Removed {0} from list of skins.",
+                        Console.WriteLine("\nRemoved {0} from list of skins.",
                             champions[tempChampNum][^1]);
                         Console.ResetColor();
                         champions[tempChampNum] = tempList.ToArray();   //replace string[] with tempList, converted to array
@@ -396,7 +397,9 @@ namespace League_Randomizer
             oldSkin = oldChroma = -1;
             Console.WriteLine("League Randomizer " + appVer);
             Console.WriteLine("Default skins enabled: " + enableDefaults);
+            Colors("Magenta");
             Console.WriteLine("{0} {1}\n", champions[champNum][1], champNum);
+            Console.ResetColor();
             while (!false)
             {
                 Reply();
@@ -440,9 +443,10 @@ namespace League_Randomizer
             /// Main; if not, returns to while loop.
             oldChampNum = champNum;
             Console.Write("Press enter to run...");
+            Colors("Magenta");
             string r = Console.ReadLine().ToLower();
-            int num;                                        //used in TryParse
-            bool numeric = Int32.TryParse(r, out num);      //check if 'reply' is numeric and try to parse
+            Console.ResetColor();
+            bool numeric = Int32.TryParse(r, out int num);  //check if 'reply' is numeric and try to parse
             #region misc.
             if (r == "clear"
                 || r == "cle"
@@ -1494,7 +1498,6 @@ namespace League_Randomizer
         ///     
         /// Resets color to gray, prompts user to press any key, then reads key and returns to Main.
         {
-            int ver = 0;
             string[] versions =
             {
                 "(09/16/2021) alpha1: ",
@@ -1510,7 +1513,8 @@ namespace League_Randomizer
                 "(10/29/2021) v0.4.0: ",
                 "(10/29/2021) v0.4.1: ",
                 "(10/30/2021) v0.4.2: ",
-                "(11/15/2021) v1.0.0: ",
+                "(11/14/2021) v1.0.0: ",
+                "(11/15/2021) v1.0.1: ",
             };
             string[] text =
             {
@@ -1527,33 +1531,34 @@ namespace League_Randomizer
                     "longer\n    colossal walls of text; they now use arrays and while loops to change " +
                     "colors and display info. Adjusted input\n    conditionals in misc. region of Reply.",
                 "Removed individual color functions and replaced with Colors() function that takes a string " +
-                    "\nparameter then selects a color based on that.",
+                    "\n    parameter then selects a color based on that.",
                 "Added filler arrays for every champion, now using correct champion numbers. Colors now " +
-                    "change\nwhen they should (including skins and chromas).",
+                    "change\n    when they should (including skins and chromas).",
                 "Added all chromas and begun adding all skins. Change chroma roll to length of array, like " +
-                    "it\nalready should have been.",
+                    "it\n    already should have been.",
                 "Finished implementing correct skins. Eliminated redundancy when rolling/displaying chromas. " +
-                    "added\noption to disable defaults on champions with 1 or more skins owned.",
+                    "added\n    option to disable defaults on champions with 1 or more skins owned.",
                 "Added Coven LeBlanc, Project Vi, Subterranian Nautilus, Surprise Party Fiddlesticks, and " +
-                    "Playmaker Lee Sin.",
+                    "Playmaker\n    Lee Sin.",
                 "List of champions and skins now pulls data from .txt file. Soon will be able to update in-" +
                     "app.",
                 "'List' function now exists with both numeric and alphabetical organization.",
                 "Started creation of update function.",
                 "Completed update function. Inputting numbers now parses and uses the int value to select a " +
-                    "champion by number."
+                    "champion\n    by number.",
+                "Fixed out of bounds exception when removing skin. Removed fake skin from Vex. Adjusted while " +
+                    "loop\n    in changelog to make more sense.",
             };
 
             Console.Clear();
             Colors("Yellow");
             Console.WriteLine("\tCHANGELOG:");
-            while (ver < versions.Length)
+            for (int ver = 0; ver < versions.Length; ver++)
             {
                 Colors("Cyan");
                 Console.Write(string.Format(" {0, -21}", versions[ver]));
                 Colors("White");
                 Console.WriteLine(text[ver]);
-                ver++;
             }
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
