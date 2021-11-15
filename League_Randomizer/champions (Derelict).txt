@@ -155,4 +155,4 @@
 154,VIEGO,Default
 155,GWEN,Default
 156,AKSHAN,Default
-157,VEX,Default,BOOBA
+157,VEX,Default

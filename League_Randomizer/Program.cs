@@ -48,6 +48,7 @@ namespace League_Randomizer
         ///     (See Skin summary for more)
         #region declarations
         static readonly Random roll = new();
+        static readonly string path = @"C:\Users\Tanner\Documents\Visual Studio 2019\Projects\League_Randomizer\League_Randomizer\champions.txt";
 
         static bool first = true;
         static bool invalid;
@@ -67,119 +68,295 @@ namespace League_Randomizer
         static readonly string appVer = "v0.4.2";
         static void Champions()
         {
-            string path = @"C:\Users\Tanner\Documents\Visual Studio 2019\Projects\League_Randomizer\League_Randomizer\champions.txt";
             try
             {
-                using (StreamReader sr = new(path))
+                using StreamReader sr = new(path);          //initialize new streamreader
+                string line;
+                while ((line = sr.ReadLine()) != null)      //for every line in the file
                 {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        string[] each = line.Split(",");
-                        champions.Add(each);
-                    }
+                    string[] each = line.Split(",");        //split each line at ',' character (each _ is separated by a comma)
+                    champions.Add(each);                    //add the string Array from the file to the list of champion Arrays (declared above)
                 }
+                sr.Close();
             }
             catch (Exception e)
             {
-                Console.WriteLine("champions.txt could not be read:");
-                Console.WriteLine(e.Message);
+                Console.WriteLine("champions.txt could not be read: ");
+                Console.WriteLine(e.Message);               //if there is an exception, display error message rather than crash program
+            }
+        }
+        static void Write()
+        {
+            try
+            {
+                using StreamWriter sw = new(path);
+                foreach (string[] champ in champions)
+                {
+                    for (int i = 0; i < champ.Length - 1; i++)  //do NOT include last word in list
+                    {
+                        sw.Write(champ[i] + ",");           //write all instances of the array EXCEPT the last with a ',' following
+                    }
+                    sw.Write(champ[champ.Length - 1]);      //write last instance of array WITHOUT a comma
+                    sw.WriteLine("");                       //end line to begin next
+                }
+                Console.WriteLine("Wrote changes to file: champions.txt");
+                Console.ReadLine();
+                sw.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("champions.txt could not be opened: ");
+                Console.WriteLine(e.Message);               //if there is an exception, display error message rather than crash program
             }
         }
         static void Update()
         {
             Console.Clear();
             Colors("Yellow");
-            Console.Write("What would you like to update? Enter 'champion', 'skin', or 'chroma'...");
+            Console.Write("What would you like to update? Enter 'champion' or 'skin'.\n\t" +
+                "Enter 'write' to permanently store any changes to file...");
             Console.ResetColor();
             string r = Console.ReadLine().ToLower();
-            if (r == "champion")
+            if (r == "champion" || r == "champ")
             {
-                Console.WriteLine("Enter name of champion to update:");
+                UpdateChamp();                          //call UpdateChamp
+            }
+            else if (r == "skin")
+            {
+                UpdateSkin();                           //call UpdateSkin
+            }
+            else if (r == "write")
+            {
+                Write();                                //call Write
+            }
+            else
+            {
+                Colors("Red");
+                Console.Write("\nInvalid input, exiting update screen.");
+                Console.ResetColor();
+                Console.ReadLine();
+            }
+        }
+        static void UpdateChamp()
+        {
+            Console.Write("\nWould you like to add or delete a champion? Enter 'add' or 'delete'...");
+            Colors("Green");
+            string r = Console.ReadLine().ToLower();
+            Console.ResetColor();
+            if (r == "add")
+            {
+                bool exists = false;
+                Console.WriteLine("\nEnter name of champion to add:");
+                Colors("Magenta");
                 string updateChamp = Console.ReadLine();
-                Console.WriteLine("What would you like to update with {0}? Enter 'add', 'delete', or 'edit'...",
-                    updateChamp);
-                r = Console.ReadLine().ToLower();
-                if (r == "add")
+                Console.ResetColor();
+                for (int i = 0; i < champions.Count; i++)   //for each string[] in champions list
                 {
-                    bool exists = false;
-                    for (int i = 0; i < champions.Count; i++)   //for each string[] in champions list
+                    if (champions[i].Contains(updateChamp.ToUpper())) //if there is already a champion with this name
                     {
-                        if (champions[i].Contains(updateChamp.ToUpper())) //if there is already a champion with this name
-                        {
-                            Console.Write("\n{0} found as existing champion. Exiting update screen.",
-                                updateChamp);
-                            exists = true;
-                            Console.ReadLine();
-                        }
+                        Colors("Red");
+                        Console.Write("\n'{0}' found as existing champion. Exiting update screen.",
+                            updateChamp);
+                        Console.ResetColor();
+                        exists = true;                  //set exists to true once encountering
+                        break;                          //stops from unnecessarily continuing through list
                     }
-                    if (!exists)
+                }
+                if (!exists)
+                {
+                    Console.Write("\n'{0}' not found as existing champion.\nDrafting new champion {1} " +
+                        "with champNum = {2} and Default skin. Confirm append to end of list?",
+                        updateChamp, updateChamp.ToUpper(), champions.Count);   //capitalize new champion name and acknowledge that it will be at the end of the list
+                    string[] newData =                  //create new string[] to be appended
                     {
-                        Console.WriteLine("{0} not found as existing champion.\nDrafting new champion to " +
-                            "with champNum = {1} and Default skin.\nConfirm append to end of list?",
-                            updateChamp, champions.Count + 1);
-                        string[] newData =                  //create new string[] to be appended
-                        {
                             (champions.Count).ToString(),   //equal to one more than the index at end of list (starts at 1)
                             updateChamp.ToUpper(),          //name of champion, capitalized
                             "Default"                       //default skin for starters
                         };
-                        r = Console.ReadLine().ToLower();
-                        if (r == "y" || r == "yes")
-                        {
-                            Console.WriteLine("Appended {0} to champions list.", updateChamp.ToUpper());
-                            champions.Add(newData);         //append new string[] to list
-                        }
-                        else
-                        {
-                            Console.WriteLine("Did not add new champion to list.");
-                        }
-                        Console.ReadLine();
-                    }
-                }
-                else if (r == "delete")
-                {
-                    Console.Write("\nCan only delete last champion in list; last champion in list is " +
-                        "currently {0}. Are you sure you want to delete?\nThis cannot be undone.",
-                        champions[champions.Count - 1][1]);
+                    Colors("Green");
                     r = Console.ReadLine().ToLower();
+                    Console.ResetColor();
                     if (r == "y" || r == "yes")
                     {
-                        Console.WriteLine("Removed {0} from list of champions.",
-                            champions[champions.Count - 1][1]);
-                        champions.RemoveAt(champions.Count - 1);    //remove string[] at final index
+                        Colors("Yellow");
+                        Console.WriteLine("\nAppended {0} to champions list.", updateChamp.ToUpper());
+                        Console.ResetColor();
+                        champions.Add(newData);         //append new string[] to list
                     }
                     else
                     {
-                        Console.WriteLine("Did not remove.");
+                        Colors("Red");
+                        Console.Write("\nDid not add new champion to list. Exiting update screen.");
+                        Console.ResetColor();
                     }
-                    Console.ReadLine();
                 }
-                else if (r == "edit")
+            }
+            else if (r == "delete")
+            {
+                Console.Write("\nCan only delete last champion in list; last champion in list is " +
+                    "currently {0}. Are you sure you want to delete?\nThis cannot be undone.",
+                    champions[champions.Count - 1][1]);
+                Colors("Green");
+                r = Console.ReadLine().ToLower();
+                Console.ResetColor();
+                if (r == "y" || r == "yes")
                 {
-                    Console.WriteLine("WIP");
-                    Console.ReadLine();
+                    Colors("Yellow");
+                    Console.WriteLine("\nRemoved {0} from list of champions.",
+                        champions[champions.Count - 1][1]);
+                    Console.ResetColor();
+                    champions.RemoveAt(champions.Count - 1);    //remove string[] at final index
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input, exiting update screen.");
-                    Console.ReadLine();
+                    Colors("Red");
+                    Console.Write("\nDid not remove.");
+                    Console.ResetColor();
                 }
             }
-            else if (r == "skin")
+            else
             {
-                Console.WriteLine("WIP");
-                Console.ReadLine();
+                Colors("Red");
+                Console.Write("\nInvalid input, exiting update screen.");
+                Console.ResetColor();
             }
-            else if (r == "chroma")
-            {
-                Console.WriteLine("WIP");
-                Console.ReadLine();
-            }
+            Console.ReadLine();
         }
-        static void Write()
+        static void UpdateSkin()
         {
-
+            bool exists = false;
+            int tempChampNum = -1;
+            Console.WriteLine("\nWhat champion would you like to update a skin for?");
+            Colors("Magenta");
+            string updateChamp = Console.ReadLine().ToLower();
+            Console.ResetColor();
+            for (int i = 0; i < champions.Count; i++)   //for each string[] in champions list
+            {
+                if (champions[i].Contains(updateChamp.ToUpper())) //if there is already a champion with this name
+                {
+                    exists = true;                      //set exists to true once encountering
+                    tempChampNum = i;                   //note the index where the champion was found
+                    break;                              //stops from unnecessarily continuing through list
+                }
+            }
+            if (exists)
+            {
+                Console.Write("\n'{0}' found as existing champion.\nWould you like to add or delete a skin " +
+                    "for {0}?", updateChamp, updateChamp.ToUpper());
+                Colors("Green");
+                string r = Console.ReadLine().ToLower();
+                Console.ResetColor();
+                if (r == "add")
+                {
+                    bool skinExists = false;
+                    List<string> tempList = new();
+                    foreach (string word in champions[tempChampNum])
+                    {
+                        tempList.Add(word);
+                    }
+                    Console.WriteLine("\nEnter the name of the new skin (ENSURE IT IS PROPERLY CAPITALIZED " +
+                        "AND SPELLED CORRECTLY):");
+                    Colors("Magenta");
+                    string tempSkin = Console.ReadLine();
+                    Console.ResetColor();
+                    for (int i = 0; i < champions[tempChampNum].Length; i++)   //for each skin in array
+                    {
+                        if (champions[tempChampNum][i] == tempSkin) //if there is already a skin with this name
+                        {
+                            skinExists = true;                  //set skinExists to true once encountering
+                            break;                              //stops from unnecessarily continuing through list
+                        }
+                    }
+                    if (!skinExists)
+                    {
+                        Console.Write("\nYou have entered ");
+                        Colors("Magenta");
+                        Console.Write(tempSkin);
+                        Console.ResetColor();
+                        Console.Write(" If this is correct, do you want to add " +
+                            "to list of skins?");           //confirm that user wants to add
+                        Colors("Green");
+                        r = Console.ReadLine().ToLower();
+                        Console.ResetColor();
+                        if (r == "y" || r == "yes")
+                        {
+                            Colors("Yellow");
+                            Console.Write("\nAdded ");
+                            Colors("Magenta");
+                            Console.Write(tempSkin);
+                            Colors("Yellow");
+                            Console.WriteLine(" to the end of {1}'s list of skins.", tempSkin,
+                                champions[tempChampNum][1]);    //write which champion it is being added to
+                            Console.ResetColor();
+                            tempList.Add(tempSkin);             //add new skin to end of temporary list
+                            champions[tempChampNum] = tempList.ToArray();   //replace current string[] in champions with tempList, converted to array
+                        }
+                        else
+                        {
+                            Colors("Red");
+                            Console.Write("\nDid not add to list of skins.");
+                            Console.ResetColor();
+                        }
+                    }
+                    else
+                    {
+                        Colors("Red");
+                        Console.Write("\n{0} is already an existing skin. Exiting update screen.", tempSkin);
+                        Console.ResetColor();
+                    }
+                }
+                else if (r == "delete" && champions[tempChampNum].Length > 3)   //if user entered 'delete' AND there is more than just 'default'
+                {
+                    Console.Write("\nCan only delete last skin in list; last skin in list is currently ");
+                    Colors("Magenta");
+                    Console.Write(champions[tempChampNum][^1]);
+                    Console.ResetColor();
+                    Console.Write(". Are you sure you want to delete?\nThis cannot be undone.");    //print last skin in array (using operator ^1)
+                    Colors("Green");
+                    r = Console.ReadLine().ToLower();
+                    Console.ResetColor();
+                    if (r == "y" || r == "yes")
+                    {
+                        List<string> tempList = new();
+                        for (int i = 0; i < champions[tempChampNum].Length - 2; i++)
+                        {
+                            tempList.Add(champions[tempChampNum][i]);   //add all strings EXCEPT the last to new tempList
+                        }
+                        Colors("Yellow");
+                        Console.WriteLine("Removed {0} from list of skins.",
+                            champions[tempChampNum][^1]);
+                        Console.ResetColor();
+                        champions[tempChampNum] = tempList.ToArray();   //replace string[] with tempList, converted to array
+                    }
+                    else
+                    {
+                        Colors("Red");
+                        Console.Write("\nDid not remove.");
+                        Console.ResetColor();
+                    }
+                }
+                else if (champions[tempChampNum].Length <= 3)
+                {
+                    Colors("Red");
+                    Console.Write("\nOnly skin currently available is Default; cannot further remove a " +
+                        "skin. Exiting update screen.");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Colors("Red");
+                    Console.Write("\nInvalid input, exiting update screen.");
+                    Console.ResetColor();
+                }
+            }
+            else
+            {
+                Colors("Red");
+                Console.Write("\nCould not find {0} in list of champions. Exiting update screen.",
+                    updateChamp.ToUpper());
+                Console.ResetColor();
+            }
+            Console.ReadLine();
         }
 
         static void Main()
@@ -264,6 +441,8 @@ namespace League_Randomizer
             oldChampNum = champNum;
             Console.Write("Press enter to run...");
             string r = Console.ReadLine().ToLower();
+            int num;                                        //used in TryParse
+            bool numeric = Int32.TryParse(r, out num);      //check if 'reply' is numeric and try to parse
             #region misc.
             if (r == "clear"
                 || r == "cle"
@@ -277,6 +456,7 @@ namespace League_Randomizer
             else if (r == "intro" || r == "reset")
             {
                 first = true;
+                champions.Clear();                      //clears champions list array to be re-written
                 Main();
             }
             else if (r == "r" || r == "rand" || r == "random")
@@ -291,9 +471,9 @@ namespace League_Randomizer
                 if (!enableDefaults) { temp = "Enable"; }
                 else { temp = "Disable"; }
                 Colors("Yellow");
-                Console.WriteLine("{0} defaults? Press 'Y' or 'N'", temp);  //uses temp var to say "Enable" or "Disable"
-                var reply = Console.ReadKey().Key;
-                if (reply == ConsoleKey.Y)                              //if user hits 'Y' key
+                Console.WriteLine("{0} defaults? Enter 'y' or 'n'", temp);  //uses temp var to say "Enable" or "Disable"
+                var reply = Console.ReadLine().ToLower();
+                if (reply == "y" || reply == "yes")                     //if user hits 'Y' key
                 {
                     if (!enableDefaults) { enableDefaults = true; }     //if currently DISABLED, enable
                     else { enableDefaults = false; }                    //if currently ENABLED, disable
@@ -317,15 +497,15 @@ namespace League_Randomizer
                 || r == "aat"
                 || r == "aatr"
                 || r == "aatro"
-                || r == "aatrox" || r == "114") { champNum = 114; }
+                || r == "aatrox") { champNum = 114; }
             else if (r == "ah"
                 || r == "ahr"
                 || r == "ninetails"
                 || r == "rule34"
-                || r == "ahri" || r == "89") { champNum = 89; }
+                || r == "ahri") { champNum = 89; }
             else if (r == "aka"
                 || r == "akal"
-                || r == "akali" || r == "51") { champNum = 51; }
+                || r == "akali") { champNum = 51; }
             else if (r == "aks"
                 || r == "aksh"
                 || r == "aksha"
@@ -335,7 +515,7 @@ namespace League_Randomizer
                 || r == "cow"
                 || r == "alis"
                 || r == "alist"
-                || r == "alistar" || r == "1") { champNum = 1; }
+                || r == "alistar") { champNum = 1; }
             else if (r == "am"
                 || r == "mu"
                 || r == "amu"
@@ -343,28 +523,28 @@ namespace League_Randomizer
                 || r == "mummy"
                 || r == "mum"
                 || r == "mumy"
-                || r == "amumu" || r == "24") { champNum = 24; }
+                || r == "amumu") { champNum = 24; }
             else if (r == "ani"
                 || r == "egg"
                 || r == "anivegg"
                 || r == "eggnivia"
                 || r == "aniv"
-                || r == "anivia" || r == "26") { champNum = 26; }
+                || r == "anivia") { champNum = 26; }
             else if (r == "ann"
                 || r == "anni"
                 || r == "teddy"
                 || r == "teddybear"
                 || r == "teddy bear"
                 || r == "tibbers"
-                || r == "annie" || r == "2") { champNum = 2; }
+                || r == "annie") { champNum = 2; }
             else if (r == "aph"
                 || r == "aphe"
                 || r == "aphel"
-                || r == "aphelios" || r == "147") { champNum = 147; }
+                || r == "aphelios") { champNum = 147; }
             else if (r == "as"
                 || r == "ash"
                 || r == "slow"
-                || r == "ashe" || r == "3") { champNum = 3; }
+                || r == "ashe") { champNum = 3; }
             else if (r == "au"
                 || r == "aur"
                 || r == "sol"
@@ -372,12 +552,12 @@ namespace League_Randomizer
                 || r == "star"
                 || r == "star guy"
                 || r == "aurelion sol"
-                || r == "aurelionsol" || r == "130") { champNum = 130; }
+                || r == "aurelionsol") { champNum = 130; }
             else if (r == "az"
                 || r == "azi"
                 || r == "soldier"
                 || r == "soldiers"
-                || r == "azir" || r == "121") { champNum = 121; }
+                || r == "azir") { champNum = 121; }
             #endregion
             #region B
             else if (r == "ba"
@@ -1065,6 +1245,22 @@ namespace League_Randomizer
                 || r == "zyra") { champNum = 101; }
             #endregion
             #endregion
+            #region numbers
+            else if (numeric)                               //if 'r' is numeric
+            {
+                if (num <= champions.Count - 1)
+                {
+                    champNum = num;                         //if 'num' is a valid champion number, change champNum to num
+                }
+                else
+                {
+                    Colors("Red");
+                    Console.WriteLine("{0} is not a valid champion number.\n", num);
+                    Console.ResetColor();
+                    invalid = true;                         //else acknowledge that it's not valid and change invalid to true
+                }
+            }
+            #endregion
             #region ds/sb
             else if ((r == "ds"
                 || r == "dra"
@@ -1118,7 +1314,7 @@ namespace League_Randomizer
             if (enableDefaults)     ///if defaults are ENABLED
             {
                 skinNum = roll.Next(2, length);     //ALWAYS roll WITH second entry: 'Default' since they're enabled
-                if (length > 3)         ///if there are more than ONLY 'Default' (plus number)
+                if (length >= 4)                //if there are more than ONLY 'Default' (plus number)
                 {
                     while (skinNum == oldSkin)
                     {
@@ -1126,15 +1322,22 @@ namespace League_Randomizer
                     }
                 }
             }
-            else
+            else///if defaults are DISABLED
             {
-                skinNum = roll.Next(3, length); //ALWAYS roll WITHOUT second entry: 'Default' since they're disabled
-                if (length > 4)         ///if there are more than just ONE skin and 'Default' (plus number)
+                if (length >= 4)                    //only omits defaults if default is not only skin
                 {
-                    while (skinNum == oldSkin)
+                    skinNum = roll.Next(3, length); //ALWAYS roll WITHOUT second entry: 'Default' since they're disabled
+                    if (length >= 5)            //if there are more than just ONE skin and 'Default'
                     {
-                        skinNum = roll.Next(3, length); //DO run anti-repeat since there are two skins even with defaults disabled
+                        while (skinNum == oldSkin)
+                        {
+                            skinNum = roll.Next(3, length); //DO run anti-repeat since there are two skins even with defaults disabled
+                        }
                     }
+                }
+                else
+                {
+                    skinNum = roll.Next(2, length); //roll starting and ending at default, not running anti-repeat
                 }
             }
             if (dragonslayer) { dragonslayer = false; skinNum = 3; }
@@ -1307,6 +1510,7 @@ namespace League_Randomizer
                 "(10/29/2021) v0.4.0: ",
                 "(10/29/2021) v0.4.1: ",
                 "(10/30/2021) v0.4.2: ",
+                "(11/15/2021) v1.0.0: ",
             };
             string[] text =
             {
@@ -1336,6 +1540,8 @@ namespace League_Randomizer
                     "app.",
                 "'List' function now exists with both numeric and alphabetical organization.",
                 "Started creation of update function.",
+                "Completed update function. Inputting numbers now parses and uses the int value to select a " +
+                    "champion by number."
             };
 
             Console.Clear();
@@ -1367,7 +1573,9 @@ namespace League_Randomizer
                 "View changelog: ",
                 "This screen: ",
                 "Clear screen: ",
-                "Reset program: "
+                "Reset program: ",
+                "List champions: ",
+                "Update info: "
             };
             string[] text =
             {
@@ -1376,7 +1584,9 @@ namespace League_Randomizer
                 "\"c\" or \"cl\" or \"changelog\"",
                 "\"h\" or \"help\"",
                 "\"clear\"",
-                "\"reset\" or \"intro\""
+                "\"reset\" or \"intro\"\n",
+                "\"list\"",
+                "\"update\""
             };
 
             Console.Clear();
@@ -1385,7 +1595,7 @@ namespace League_Randomizer
             while (num < commands.Length)
             {
                 Colors("Cyan");
-                Console.Write(string.Format(" {0, -18}", commands[num]));
+                Console.Write(string.Format(" {0, -19}", commands[num]));
                 Colors("White");
                 Console.WriteLine(text[num]);
                 num++;
