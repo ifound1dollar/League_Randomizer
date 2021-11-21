@@ -572,7 +572,7 @@ namespace League_Randomizer
                 || r == "blit"
                 || r == "blitz"
                 || r == "robot"
-                || r == "blitzcrank") { champNum = 34; }
+                || r == "blitzcrank") { champNum = 32; }
             else if (r == "bran"
                 || r == "fire"
                 || r == "fire guy"
@@ -1409,11 +1409,12 @@ namespace League_Randomizer
                 }   //Grey Warwick
                 else if (name == "Victorious ")
                 {
-                    if (champNum == 77) { string[] chroma = { "", "Green" }; sk = chroma; }         //Orianna
+                    if (champNum == 32) { string[] chroma = { "", "Green", "Purple" }; }            //Blitzcrank
+                    else if (champNum == 77) { string[] chroma = { "", "Green" }; sk = chroma; }    //Orianna
                     else if (champNum == 85) { string[] chroma = { "", "White" }; sk = chroma; }    //Graves
                     else if (champNum == 115) { string[] chroma = { "", "Green", "Light Blue" };    //Lucian
                         sk = chroma; }
-                }   //Victorious Orianna, Graves, Lucian
+                }   //Victorious Blitzcrank, Orianna, Graves, Lucian
 
                 chromaNum = roll.Next(sk.Length);
                 while (chromaNum == oldChroma) { chromaNum = roll.Next(sk.Length); }
@@ -1515,6 +1516,7 @@ namespace League_Randomizer
                 "(10/30/2021) v0.4.2: ",
                 "(11/14/2021) v1.0.0: ",
                 "(11/15/2021) v1.0.1: ",
+                "(11/21/2021) v1.0.2: ",
             };
             string[] text =
             {
@@ -1548,6 +1550,7 @@ namespace League_Randomizer
                     "champion\n    by number.",
                 "Fixed out of bounds exception when removing skin. Removed fake skin from Vex. Adjusted while " +
                     "loop\n    in changelog to make more sense.",
+                "Fixed Blitzcrank bug (changing champNum to Janna's) and added Victorious Blitzcrank chromas.",
             };
 
             Console.Clear();

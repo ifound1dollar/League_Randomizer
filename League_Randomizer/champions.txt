@@ -30,7 +30,7 @@
 29,KASSADIN,Default
 30,GANGPLANK,Default
 31,TARIC,Default
-32,BLITZCRANK,Default,Boom Boom
+32,BLITZCRANK,Default,Boom Boom,Victorious 
 33,DR. MUNDO,Default
 34,JANNA,Default
 35,MALPHITE,Default,Mecha 
@@ -107,7 +107,7 @@
 106,ELISE,Default
 107,ZED,Default
 108,NAMI,Default
-109,VI,Default,Project
+109,VI,Default,Project,Arcane
 110,THRESH,Default,SSW
 111,QUINN,Default,Phoenix
 112,ZAC,Default
