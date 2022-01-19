@@ -54,15 +54,15 @@ namespace League_Randomizer
         static bool invalid;
         public static bool dragonslayer;
         public static bool spiritBlossom;
-        public static bool enableDefaults;              //used in Champion class
+        public static bool enableDefaults;              //three publics are accessed in Champion class
 
         static int champNum;
         static int oldChampNum;
 
-        public static readonly List<string[]> champions = new();
+        public static readonly List<string[]> champions = new();    //accessed in Update_ classes
         #endregion
-        static readonly string appVer = "v1.0.4";
-        static void Champions()
+        static readonly string appVer = "v1.0.6";
+        static void LoadChampions()
         {
             try
             {
@@ -199,7 +199,7 @@ namespace League_Randomizer
             Console.ResetColor();
             if (first)
             {
-                Champions();
+                LoadChampions();
                 first = false;
                 champNum = 76;
                 Intro();
@@ -261,51 +261,45 @@ namespace League_Randomizer
             Console.ResetColor();
             bool numeric = Int32.TryParse(userInput, out int num);  //check if 'reply' is numeric and try to parse
             #region misc.
-            if (userInput == "clear"
-                || userInput == "cle"
-                || userInput == "clea") { Main(); }
-            else if (userInput == "c"
-                || userInput == "cl"
-                || userInput == "changelog") { Changelog(); }
-            else if (userInput == "h"
-                || userInput == "hel"
-                || userInput == "help") { Help(); }
-            else if (userInput == "intro" || userInput == "reset")
+            if (userInput == "clear")
+            {
+                Main();
+            }
+            else if (userInput == "c" || userInput == "changelog")
+            {
+                Changelog();
+                Main();
+            }
+            else if (userInput == "h" || userInput == "help")
+            {
+                Help();
+                Main();
+            }
+            else if (userInput == "reset" || userInput == "intro")
             {
                 first = true;
                 champions.Clear();                      //clears champions list array to be re-written
                 Main();
             }
-            else if (userInput == "userInput" || userInput == "rand" || userInput == "random")
+            else if (userInput == "r" || userInput == "rand" || userInput == "random")
             {
                 champNum = roll.Next(champions.Count);
                 Main();
             }
             else if (userInput == "def" || userInput == "default")
             {
-                Console.Clear();
-                string temp;
-                if (!enableDefaults) { temp = "Enable"; }
-                else { temp = "Disable"; }
-                Colors.SetColor("Yellow");
-                Console.WriteLine("{0} defaults? Enter 'y' or 'n'", temp);  //uses temp var to say "Enable" or "Disable"
-                var reply = Console.ReadLine().ToLower();
-                if (reply == "y" || reply == "yes")                     //if user hits 'Y' key
-                {
-                    if (!enableDefaults) { enableDefaults = true; }     //if currently DISABLED, enable
-                    else { enableDefaults = false; }                    //if currently ENABLED, disable
-                }
-                Main();                                             //call Main to reset
+                EnableDefaults();                       //call defaults function
+                Main();                                 //call Main to reset
             }
             else if (userInput == "list")
             {
-                List();                                         //call list function
-                Main();                                         //return to main
+                List();                                 //call list function
+                Main();                                 //return to main
             }
             else if (userInput == "update")
             {
-                Update();
-                Main();
+                Update();                               //call update function
+                Main();                                 //return to main
             }
             #endregion
             #region champions
@@ -1062,6 +1056,10 @@ namespace League_Randomizer
                 || userInput == "zyra") { champNum = 101; }
             #endregion
             #endregion
+            //else if (IsChampionChanged())
+                //inside ^ method, checks every available string in champion_strings and returns a bool
+                //if true, calls Main() right away
+                //can remove if statement at the bottom with this as well, and oldChampNum won't be needed anymore
             #region numbers
             else if (numeric)                               //if 'userInput' is numeric
             {
@@ -1120,33 +1118,82 @@ namespace League_Randomizer
         }
         static void List()
         {
-            for (int i = 1; i < champions.Count; i++)       //for ever champion (string array) in list
-            {
-                Console.WriteLine("{0,3} {1}", champions[i][0], champions[i][1]);   //displays index 0 (number) and index 1 (name)
-            }
-            Console.Write("\nType 'a' for alphabetical or press enter to return...");
+            Console.Clear();
+            Console.Write("\nEnter 'a' for alphabetical, 'n' for numeric, or press enter to cancel...");
+            Colors.SetColor("Magenta");
             string userInput = Console.ReadLine().ToLower();
-            if (userInput == "a")               ///allows user to type 'a' to sort alphabetically
+            Console.ResetColor();
+            Console.WriteLine("\n");                        //simple whitespace
+
+            if (userInput == "a")       ///user entered 'a' to sort alphabetically
             {
                 List<string> names = new();                 //create new temporary list for names
                 for (int i = 1; i < champions.Count; i++)   //for every name in list
                 {
                     names.Add(champions[i][1]);             //add the second index (name) of each array
                 }
+
                 names.Sort();                               //sort the new list alphabetically
+
                 foreach (string word in names)              //for each string in list 'names'
                 {
                     for (int i = 1; i < champions.Count; i++)   //go through every array in 'champions' list to find what index the name in 'names' is at
                     {
                         if (champions[i].Contains(word))        //as soon as a match is found
                         {
-                            Console.WriteLine("{0, 3} {1}", champions[i][0], word); //write the number (that was just found) and the word (name)
+                            Console.WriteLine("{0, 3} {1}", champions[i][0], word);
+                            //write the number (that was just found) and the word (name), ALPHABETICALLY
                         }
                     }
                 }
                 Console.Write("\nPress enter to return...");
                 Console.ReadLine();
             }
+            else if (userInput == "n")
+            {
+                for (int i = 1; i < champions.Count; i++)       //for ever champion (string array) in list
+                {
+                    Console.WriteLine("{0,3} {1}", champions[i][0], champions[i][1]);
+                    //displays index 0 (number) and index 1 (name), NUMERICALLY
+                }
+                Console.Write("\nPress enter to return...");
+                Console.ReadLine();
+            }
+        }
+        static void EnableDefaults()
+        {
+            Console.Clear();
+            string enabledOrDisabled;
+            if (enableDefaults)
+            {
+                enabledOrDisabled = "enabled";
+            }
+            else
+            {
+                enabledOrDisabled = "disabled";
+            }
+
+            Colors.SetColor("Yellow");
+            Console.WriteLine("Default skins are currently {0}.\n\tEnter 'enable' or 'disable' to update.",
+                enabledOrDisabled);
+            string userInput = Console.ReadLine().ToLower();
+            if (userInput == "enable" || userInput == "e")                     //if user hits 'Y' key
+            {
+                Console.WriteLine("\nEnabled defaults.");
+                enableDefaults = true;
+            }
+            else if (userInput == "disable" || userInput == "d")
+            {
+                Console.WriteLine("\nDisabled defaults.");
+                enableDefaults = false;
+            }
+            else
+            {
+                Colors.SetColor("Red");
+                Console.WriteLine("\nInvalid input, cancelling.");
+                Console.ResetColor();
+            }
+            Console.ReadLine();
         }
         static void Changelog()
         /// Simple changelog that can be accessed when user enters c (among other inputs).
@@ -1184,7 +1231,8 @@ namespace League_Randomizer
                 "(11/15/2021) v1.0.1: ",
                 "(11/21/2021) v1.0.2: ",
                 "(12/06/2021) v1.0.3: ",
-                "(01/19/2022) v1.0.5: ",
+                "(01/18/2022) v1.0.5: ",
+                "(01/19/2022) v1.0.6: ",
             };
             string[] details =
             {
@@ -1221,7 +1269,10 @@ namespace League_Randomizer
                 "Fixed Blitzcrank bug (changing champNum to Janna's) and added Victorious Blitzcrank chromas.",
                 "Fixed various bugs with champion numbers.",
                 "Added better (and more) in-line comments throughout code. Changed some variable names to be " +
-                    "\n    more descriptive. UpdateChampion and UpdateSkin now have their own classes."
+                    "\n    more descriptive. UpdateChampion and UpdateSkin now have their own classes.",
+                "Continued adding better comments and adjusting variable names. EnableDefaults() is much less " +
+                    "\n    ridiculous and is now its own function. Began preparing to implement automatic " +
+                    "champion string checking.",
             };
 
             Console.Clear();
@@ -1237,7 +1288,6 @@ namespace League_Randomizer
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
             Console.ReadKey();
-            Main();
         }
         static void Help()
         /// Works very similar to Changelog; simple help screen showing commands.
@@ -1258,8 +1308,8 @@ namespace League_Randomizer
             string[] instructions =
             {
                 "input Champion name or number (champion numbers are chronological)\n",
-                "\"userInput\" or \"rand\" or \"random\"",
-                "\"c\" or \"cl\" or \"changelog\"",
+                "\"r\" or \"rand\" or \"random\"",
+                "\"c\" or \"changelog\"",
                 "\"h\" or \"help\"",
                 "\"clear\"",
                 "\"reset\" or \"intro\"\n",
@@ -1280,7 +1330,6 @@ namespace League_Randomizer
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
             Console.ReadKey();
-            Main();
         }
     }
 }
