@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace League_Randomizer
 {
-    class Program   ///add 'include default' setting to program
+    class Program
     {
         /// Defines variables upon program start that are used throughout the class.
         /// 
@@ -52,32 +52,28 @@ namespace League_Randomizer
 
         static bool first = true;
         static bool invalid;
-        static bool dragonslayer;
-        static bool spiritBlossom;
-        static bool enableDefaults;
+        public static bool dragonslayer;
+        public static bool spiritBlossom;
+        public static bool enableDefaults;              //used in Champion class
 
         static int champNum;
         static int oldChampNum;
-        static int skinNum;
-        static int oldSkin;
-        static int chromaNum;
-        static int oldChroma;
 
-        static readonly List<string[]> champions = new();
+        public static readonly List<string[]> champions = new();
         #endregion
-        static readonly string appVer = "v1.0.1";
+        static readonly string appVer = "v1.0.4";
         static void Champions()
         {
             try
             {
-                using StreamReader sr = new(path);          //initialize new streamreader
+                using StreamReader sr = new(path);      //initialize new streamreader
                 string line;
-                while ((line = sr.ReadLine()) != null)      //for every line in the file
+                while ((line = sr.ReadLine()) != null)  //for every line in the file
                 {
-                    string[] each = line.Split(",");        //split each line at ',' character (each _ is separated by a comma)
-                    champions.Add(each);                    //add the string Array from the file to the list of champion Arrays (declared above)
+                    string[] item = line.Split(",");        //split each line at ',' character (each item is separated by a comma)
+                    champions.Add(item);                    //add the new string Array (from the file) to the champions list of Arrays
                 }
-                sr.Close();
+                sr.Close();                             //close streamreader
             }
             catch (Exception e)
             {
@@ -89,19 +85,19 @@ namespace League_Randomizer
         {
             try
             {
-                using StreamWriter sw = new(path);
-                foreach (string[] champ in champions)
+                using StreamWriter sw = new(path);      //initialize new streamwriter
+                foreach (string[] champ in champions)   //for each champion's data in champions list
                 {
                     for (int i = 0; i < champ.Length - 1; i++)  //do NOT include last word in list
                     {
-                        sw.Write(champ[i] + ",");           //write all instances of the array EXCEPT the last with a ',' following
+                        sw.Write(champ[i] + ",");               //write all instances of the array EXCEPT the last with a ',' following
                     }
                     sw.Write(champ[champ.Length - 1]);      //write last instance of array WITHOUT a comma
                     sw.WriteLine("");                       //end line to begin next
                 }
                 Console.WriteLine("\nWrote changes to file: champions.txt");
-                Console.ReadLine();
-                sw.Close();
+                Console.ReadLine();                     //wait on user input
+                sw.Close();                             //close streamwriter
             }
             catch (Exception e)
             {
@@ -112,252 +108,67 @@ namespace League_Randomizer
         static void Update()
         {
             Console.Clear();
-            Colors("Yellow");
+            Colors.SetColor("Yellow");
             Console.Write("What would you like to update? Enter 'champion' or 'skin'.\n\t" +
                 "Enter 'write' to permanently store any changes to file...");
             Console.ResetColor();
-            string r = Console.ReadLine().ToLower();
-            if (r == "champion" || r == "champ")
+            string userInput = Console.ReadLine().ToLower();
+
+            if (userInput == "champion")
             {
-                UpdateChamp();                          //call UpdateChamp
+                Console.Write("\nAdd or delete champion? Enter 'add' or 'delete'...");
+                Colors.SetColor("Green");
+                userInput = Console.ReadLine().ToLower();
+                Console.ResetColor();
+                if (userInput == "add")
+                {
+                    UpdateChampion.Add();           //add champion elsewhere
+                }
+                else if (userInput == "delete")
+                {
+                    UpdateChampion.Delete();        //remove champion elsewhere
+                }
+                else
+                {
+                    Colors.SetColor("Red");
+                    Console.Write("\nInvalid input, exiting update screen.");
+                    Console.ResetColor();
+                }
             }
-            else if (r == "skin")
+            else if (userInput == "skin")
             {
-                UpdateSkin();                           //call UpdateSkin
+                Console.Write("\nAdd or delete skin? Enter 'add' or 'delete'...");
+                Colors.SetColor("Green");
+                userInput = Console.ReadLine().ToLower();
+                Console.ResetColor();
+                if (userInput == "add")
+                {
+                    UpdateSkin.Add();               //add skin elsewhere
+                }
+                else if (userInput == "delete")
+                {
+                    UpdateSkin.Delete();            //remove skin elsewhere
+                }
+                else
+                {
+                    Colors.SetColor("Red");
+                    Console.Write("\nInvalid input, exiting update screen.");
+                    Console.ResetColor();
+                }
             }
-            else if (r == "write")
+            else if (userInput == "write")
             {
                 Write();                                //call Write
             }
             else
             {
-                Colors("Red");
+                Colors.SetColor("Red");
                 Console.Write("\nInvalid input, exiting update screen.");
                 Console.ResetColor();
                 Console.ReadLine();
             }
-            Main();
-        }
-        static void UpdateChamp()
-        {
-            Console.Write("\nWould you like to add or delete a champion? Enter 'add' or 'delete'...");
-            Colors("Green");
-            string r = Console.ReadLine().ToLower();
-            Console.ResetColor();
-            if (r == "add")
-            {
-                bool exists = false;
-                Console.WriteLine("\nEnter name of champion to add:");
-                Colors("Magenta");
-                string updateChamp = Console.ReadLine();
-                Console.ResetColor();
-                for (int i = 0; i < champions.Count; i++)   //for each string[] in champions list
-                {
-                    if (champions[i].Contains(updateChamp.ToUpper())) //if there is already a champion with this name
-                    {
-                        Colors("Red");
-                        Console.Write("\n'{0}' found as existing champion. Exiting update screen.",
-                            updateChamp);
-                        Console.ResetColor();
-                        exists = true;                  //set exists to true once encountering
-                        break;                          //stops from unnecessarily continuing through list
-                    }
-                }
-                if (!exists)
-                {
-                    Console.Write("\n'{0}' not found as existing champion.\nDrafting new champion {1} " +
-                        "with champNum = {2} and Default skin. Confirm append to end of list?",
-                        updateChamp, updateChamp.ToUpper(), champions.Count);   //capitalize new champion name and acknowledge that it will be at the end of the list
-                    string[] newData =                  //create new string[] to be appended
-                    {
-                            (champions.Count).ToString(),   //equal to one more than the index at end of list (starts at 1)
-                            updateChamp.ToUpper(),          //name of champion, capitalized
-                            "Default"                       //default skin for starters
-                        };
-                    Colors("Green");
-                    r = Console.ReadLine().ToLower();
-                    Console.ResetColor();
-                    if (r == "y" || r == "yes")
-                    {
-                        Colors("Yellow");
-                        Console.WriteLine("\nAppended {0} to champions list.", updateChamp.ToUpper());
-                        Console.ResetColor();
-                        champions.Add(newData);         //append new string[] to list
-                    }
-                    else
-                    {
-                        Colors("Red");
-                        Console.Write("\nDid not add new champion to list. Exiting update screen.");
-                        Console.ResetColor();
-                    }
-                }
-            }
-            else if (r == "delete")
-            {
-                Console.Write("\nCan only delete last champion in list; last champion in list is " +
-                    "currently {0}. Are you sure you want to delete?\nThis cannot be undone.",
-                    champions[champions.Count - 1][1]);
-                Colors("Green");
-                r = Console.ReadLine().ToLower();
-                Console.ResetColor();
-                if (r == "y" || r == "yes")
-                {
-                    Colors("Yellow");
-                    Console.WriteLine("\nRemoved {0} from list of champions.",
-                        champions[champions.Count - 1][1]);
-                    Console.ResetColor();
-                    champions.RemoveAt(champions.Count - 1);    //remove string[] at final index
-                }
-                else
-                {
-                    Colors("Red");
-                    Console.Write("\nDid not remove.");
-                    Console.ResetColor();
-                }
-            }
-            else
-            {
-                Colors("Red");
-                Console.Write("\nInvalid input, exiting update screen.");
-                Console.ResetColor();
-            }
-            Console.ReadLine();
-        }
-        static void UpdateSkin()
-        {
-            bool exists = false;
-            int tempChampNum = -1;
-            Console.WriteLine("\nWhat champion would you like to update a skin for?");
-            Colors("Magenta");
-            string updateChamp = Console.ReadLine().ToLower();
-            Console.ResetColor();
-            for (int i = 0; i < champions.Count; i++)   //for each string[] in champions list
-            {
-                if (champions[i].Contains(updateChamp.ToUpper())) //if there is already a champion with this name
-                {
-                    exists = true;                      //set exists to true once encountering
-                    tempChampNum = i;                   //note the index where the champion was found
-                    break;                              //stops from unnecessarily continuing through list
-                }
-            }
-            if (exists)
-            {
-                Console.Write("\n'{0}' found as existing champion.\nWould you like to add or delete a skin " +
-                    "for {0}?", updateChamp, updateChamp.ToUpper());
-                Colors("Green");
-                string r = Console.ReadLine().ToLower();
-                Console.ResetColor();
-                if (r == "add")
-                {
-                    bool skinExists = false;
-                    List<string> tempList = new();
-                    foreach (string word in champions[tempChampNum])
-                    {
-                        tempList.Add(word);
-                    }
-                    Console.WriteLine("\nEnter the name of the new skin (ENSURE IT IS PROPERLY CAPITALIZED " +
-                        "AND SPELLED CORRECTLY):");
-                    Colors("Magenta");
-                    string tempSkin = Console.ReadLine();
-                    Console.ResetColor();
-                    for (int i = 0; i < champions[tempChampNum].Length; i++)   //for each skin in array
-                    {
-                        if (champions[tempChampNum][i] == tempSkin) //if there is already a skin with this name
-                        {
-                            skinExists = true;                  //set skinExists to true once encountering
-                            break;                              //stops from unnecessarily continuing through list
-                        }
-                    }
-                    if (!skinExists)
-                    {
-                        Console.Write("\nYou have entered ");
-                        Colors("Magenta");
-                        Console.Write(tempSkin);
-                        Console.ResetColor();
-                        Console.Write(". If this is correct, do you want to add " +
-                            "to list of skins?");           //confirm that user wants to add
-                        Colors("Green");
-                        r = Console.ReadLine().ToLower();
-                        Console.ResetColor();
-                        if (r == "y" || r == "yes")
-                        {
-                            Colors("Yellow");
-                            Console.Write("\nAdded ");
-                            Colors("Magenta");
-                            Console.Write(tempSkin);
-                            Colors("Yellow");
-                            Console.WriteLine(" to the end of {1}'s list of skins.", tempSkin,
-                                champions[tempChampNum][1]);    //write which champion it is being added to
-                            Console.ResetColor();
-                            tempList.Add(tempSkin);             //add new skin to end of temporary list
-                            champions[tempChampNum] = tempList.ToArray();   //replace current string[] in champions with tempList, converted to array
-                        }
-                        else
-                        {
-                            Colors("Red");
-                            Console.Write("\nDid not add to list of skins.");
-                            Console.ResetColor();
-                        }
-                    }
-                    else
-                    {
-                        Colors("Red");
-                        Console.Write("\n{0} is already an existing skin. Exiting update screen.", tempSkin);
-                        Console.ResetColor();
-                    }
-                }
-                else if (r == "delete" && champions[tempChampNum].Length > 3)   //if user entered 'delete' AND there is more than just 'default'
-                {
-                    Console.Write("\nCan only delete last skin in list; last skin in list is currently ");
-                    Colors("Magenta");
-                    Console.Write(champions[tempChampNum][^1]);
-                    Console.ResetColor();
-                    Console.Write(". Are you sure you want to delete?\nThis cannot be undone.");    //print last skin in array (using operator ^1)
-                    Colors("Green");
-                    r = Console.ReadLine().ToLower();
-                    Console.ResetColor();
-                    if (r == "y" || r == "yes")
-                    {
-                        List<string> tempList = new();
-                        for (int i = 0; i < champions[tempChampNum].Length - 1; i++)
-                        {
-                            tempList.Add(champions[tempChampNum][i]);   //add all strings EXCEPT the last to new tempList
-                        }
-                        Colors("Yellow");
-                        Console.WriteLine("\nRemoved {0} from list of skins.",
-                            champions[tempChampNum][^1]);
-                        Console.ResetColor();
-                        champions[tempChampNum] = tempList.ToArray();   //replace string[] with tempList, converted to array
-                    }
-                    else
-                    {
-                        Colors("Red");
-                        Console.Write("\nDid not remove.");
-                        Console.ResetColor();
-                    }
-                }
-                else if (champions[tempChampNum].Length <= 3)
-                {
-                    Colors("Red");
-                    Console.Write("\nOnly skin currently available is Default; cannot further remove a " +
-                        "skin. Exiting update screen.");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Colors("Red");
-                    Console.Write("\nInvalid input, exiting update screen.");
-                    Console.ResetColor();
-                }
-            }
-            else
-            {
-                Colors("Red");
-                Console.Write("\nCould not find {0} in list of champions. Exiting update screen.",
-                    updateChamp.ToUpper());
-                Console.ResetColor();
-            }
-            Console.ReadLine();
+
+            Main();                                     //return to main afterword
         }
 
         static void Main()
@@ -394,17 +205,19 @@ namespace League_Randomizer
                 Intro();
                 Console.Clear();
             }
-            oldSkin = oldChroma = -1;
+
+            Champion currentChampion = new(champions[champNum]);    //declare new currentChampion object and pass current champion string array
+
             Console.WriteLine("League Randomizer " + appVer);
             Console.WriteLine("Default skins enabled: " + enableDefaults);
-            Colors("Magenta");
-            Console.WriteLine("{0} {1}\n", champions[champNum][1], champNum);
+            Colors.SetColor("Magenta");
+            Console.WriteLine("{0} {1}\n", currentChampion.Name, currentChampion.Index);
             Console.ResetColor();
             while (!false)
             {
                 Reply();
                 if (invalid) { invalid = false; continue; }
-                Skin();
+                currentChampion.PrintSkin();
             }
         }
         static void Reply()
@@ -443,38 +256,38 @@ namespace League_Randomizer
             /// Main; if not, returns to while loop.
             oldChampNum = champNum;
             Console.Write("Press enter to run...");
-            Colors("Magenta");
-            string r = Console.ReadLine().ToLower();
+            Colors.SetColor("Magenta");
+            string userInput = Console.ReadLine().ToLower();
             Console.ResetColor();
-            bool numeric = Int32.TryParse(r, out int num);  //check if 'reply' is numeric and try to parse
+            bool numeric = Int32.TryParse(userInput, out int num);  //check if 'reply' is numeric and try to parse
             #region misc.
-            if (r == "clear"
-                || r == "cle"
-                || r == "clea") { Main(); }
-            else if (r == "c"
-                || r == "cl"
-                || r == "changelog") { Changelog(); }
-            else if (r == "h"
-                || r == "hel"
-                || r == "help") { Help(); }
-            else if (r == "intro" || r == "reset")
+            if (userInput == "clear"
+                || userInput == "cle"
+                || userInput == "clea") { Main(); }
+            else if (userInput == "c"
+                || userInput == "cl"
+                || userInput == "changelog") { Changelog(); }
+            else if (userInput == "h"
+                || userInput == "hel"
+                || userInput == "help") { Help(); }
+            else if (userInput == "intro" || userInput == "reset")
             {
                 first = true;
                 champions.Clear();                      //clears champions list array to be re-written
                 Main();
             }
-            else if (r == "r" || r == "rand" || r == "random")
+            else if (userInput == "userInput" || userInput == "rand" || userInput == "random")
             {
                 champNum = roll.Next(champions.Count);
                 Main();
             }
-            else if (r == "def" || r == "default")
+            else if (userInput == "def" || userInput == "default")
             {
                 Console.Clear();
                 string temp;
                 if (!enableDefaults) { temp = "Enable"; }
                 else { temp = "Disable"; }
-                Colors("Yellow");
+                Colors.SetColor("Yellow");
                 Console.WriteLine("{0} defaults? Enter 'y' or 'n'", temp);  //uses temp var to say "Enable" or "Disable"
                 var reply = Console.ReadLine().ToLower();
                 if (reply == "y" || reply == "yes")                     //if user hits 'Y' key
@@ -484,12 +297,12 @@ namespace League_Randomizer
                 }
                 Main();                                             //call Main to reset
             }
-            else if (r == "list")
+            else if (userInput == "list")
             {
                 List();                                         //call list function
                 Main();                                         //return to main
             }
-            else if (r == "update")
+            else if (userInput == "update")
             {
                 Update();
                 Main();
@@ -497,760 +310,760 @@ namespace League_Randomizer
             #endregion
             #region champions
             #region A
-            else if (r == "aa"
-                || r == "aat"
-                || r == "aatr"
-                || r == "aatro"
-                || r == "aatrox") { champNum = 114; }
-            else if (r == "ah"
-                || r == "ahr"
-                || r == "ninetails"
-                || r == "rule34"
-                || r == "ahri") { champNum = 89; }
-            else if (r == "aka"
-                || r == "akal"
-                || r == "akali") { champNum = 51; }
-            else if (r == "aks"
-                || r == "aksh"
-                || r == "aksha"
-                || r == "akshan") { champNum = 156; }
-            else if (r == "al"
-                || r == "ali"
-                || r == "cow"
-                || r == "alis"
-                || r == "alist"
-                || r == "alistar") { champNum = 1; }
-            else if (r == "am"
-                || r == "mu"
-                || r == "amu"
-                || r == "amum"
-                || r == "mummy"
-                || r == "mum"
-                || r == "mumy"
-                || r == "amumu") { champNum = 24; }
-            else if (r == "ani"
-                || r == "egg"
-                || r == "anivegg"
-                || r == "eggnivia"
-                || r == "aniv"
-                || r == "anivia") { champNum = 26; }
-            else if (r == "ann"
-                || r == "anni"
-                || r == "teddy"
-                || r == "teddybear"
-                || r == "teddy bear"
-                || r == "tibbers"
-                || r == "annie") { champNum = 2; }
-            else if (r == "aph"
-                || r == "aphe"
-                || r == "aphel"
-                || r == "aphelios") { champNum = 147; }
-            else if (r == "as"
-                || r == "ash"
-                || r == "slow"
-                || r == "ashe") { champNum = 3; }
-            else if (r == "au"
-                || r == "aur"
-                || r == "sol"
-                || r == "asol"
-                || r == "star"
-                || r == "star guy"
-                || r == "aurelion sol"
-                || r == "aurelionsol") { champNum = 130; }
-            else if (r == "az"
-                || r == "azi"
-                || r == "soldier"
-                || r == "soldiers"
-                || r == "azir") { champNum = 121; }
+            else if (userInput == "aa"
+                || userInput == "aat"
+                || userInput == "aatr"
+                || userInput == "aatro"
+                || userInput == "aatrox") { champNum = 114; }
+            else if (userInput == "ah"
+                || userInput == "ahr"
+                || userInput == "ninetails"
+                || userInput == "rule34"
+                || userInput == "ahri") { champNum = 89; }
+            else if (userInput == "aka"
+                || userInput == "akal"
+                || userInput == "akali") { champNum = 51; }
+            else if (userInput == "aks"
+                || userInput == "aksh"
+                || userInput == "aksha"
+                || userInput == "akshan") { champNum = 156; }
+            else if (userInput == "al"
+                || userInput == "ali"
+                || userInput == "cow"
+                || userInput == "alis"
+                || userInput == "alist"
+                || userInput == "alistar") { champNum = 1; }
+            else if (userInput == "am"
+                || userInput == "mu"
+                || userInput == "amu"
+                || userInput == "amum"
+                || userInput == "mummy"
+                || userInput == "mum"
+                || userInput == "mumy"
+                || userInput == "amumu") { champNum = 24; }
+            else if (userInput == "ani"
+                || userInput == "egg"
+                || userInput == "anivegg"
+                || userInput == "eggnivia"
+                || userInput == "aniv"
+                || userInput == "anivia") { champNum = 26; }
+            else if (userInput == "ann"
+                || userInput == "anni"
+                || userInput == "teddy"
+                || userInput == "teddybear"
+                || userInput == "teddy bear"
+                || userInput == "tibbers"
+                || userInput == "annie") { champNum = 2; }
+            else if (userInput == "aph"
+                || userInput == "aphe"
+                || userInput == "aphel"
+                || userInput == "aphelios") { champNum = 147; }
+            else if (userInput == "as"
+                || userInput == "ash"
+                || userInput == "slow"
+                || userInput == "ashe") { champNum = 3; }
+            else if (userInput == "au"
+                || userInput == "aur"
+                || userInput == "sol"
+                || userInput == "asol"
+                || userInput == "star"
+                || userInput == "star guy"
+                || userInput == "aurelion sol"
+                || userInput == "aurelionsol") { champNum = 130; }
+            else if (userInput == "az"
+                || userInput == "azi"
+                || userInput == "soldier"
+                || userInput == "soldiers"
+                || userInput == "azir") { champNum = 121; }
             #endregion
             #region B
-            else if (r == "ba"
-                || r == "bar"
-                || r == "bard") { champNum = 124; }
-            else if (r == "bl"
-                || r == "bli"
-                || r == "blit"
-                || r == "blitz"
-                || r == "robot"
-                || r == "blitzcrank") { champNum = 32; }
-            else if (r == "bran"
-                || r == "fire"
-                || r == "fire guy"
-                || r == "brand") { champNum = 74; }
-            else if (r == "brau"
-                || r == "daddy"
-                || r == "braum") { champNum = 119; }
+            else if (userInput == "ba"
+                || userInput == "bar"
+                || userInput == "bard") { champNum = 124; }
+            else if (userInput == "bl"
+                || userInput == "bli"
+                || userInput == "blit"
+                || userInput == "blitz"
+                || userInput == "robot"
+                || userInput == "blitzcrank") { champNum = 32; }
+            else if (userInput == "bran"
+                || userInput == "fire"
+                || userInput == "fire guy"
+                || userInput == "brand") { champNum = 74; }
+            else if (userInput == "brau"
+                || userInput == "daddy"
+                || userInput == "braum") { champNum = 119; }
             #endregion
             #region C
-            else if (r == "cai"
-                || r == "cait"
-                || r == "caitlyn") { champNum = 67; }
-            else if (r == "cam"
-                || r == "cami"
-                || r == "camil"
-                || r == "camille") { champNum = 134; }
-            else if (r == "cas"
-                || r == "cass"
-                || r == "snake"
-                || r == "snake lady"
-                || r == "cassiopeia") { champNum = 66; }
-            else if (r == "cho"
-                || r == "munch"
-                || r == "chogath"
-                || r == "cho gath"
-                || r == "cho'gath") { champNum = 25; }
-            else if (r == "co"
-                || r == "cor"
-                || r == "cork"
-                || r == "corki") { champNum = 37; }
+            else if (userInput == "cai"
+                || userInput == "cait"
+                || userInput == "caitlyn") { champNum = 67; }
+            else if (userInput == "cam"
+                || userInput == "cami"
+                || userInput == "camil"
+                || userInput == "camille") { champNum = 134; }
+            else if (userInput == "cas"
+                || userInput == "cass"
+                || userInput == "snake"
+                || userInput == "snake lady"
+                || userInput == "cassiopeia") { champNum = 66; }
+            else if (userInput == "cho"
+                || userInput == "munch"
+                || userInput == "chogath"
+                || userInput == "cho gath"
+                || userInput == "cho'gath") { champNum = 25; }
+            else if (userInput == "co"
+                || userInput == "cor"
+                || userInput == "cork"
+                || userInput == "corki") { champNum = 36; }
             #endregion
             #region D
-            else if (r == "da"
-                || r == "dar"
-                || r == "dari"
-                || r == "darius") { champNum = 98; }
-            else if (r == "di"
-                || r == "dia"
-                || r == "dian"
-                || r == "moon"
-                || r == "moon lady"
-                || r == "diana") { champNum = 102; }
-            else if (r == "dra"
-                || r == "drav"
-                || r == "drave"
-                || r == "draven") { champNum = 99; }
-            else if (r == "dr"
-                || r == "dr."
-                || r == "mu"
-                || r == "mundo"
-                || r == "drmundo"
-                || r == "dr mundo"
-                || r == "dr. mundo"
-                || r == "dr.mundo") { champNum = 35; }
+            else if (userInput == "da"
+                || userInput == "dar"
+                || userInput == "dari"
+                || userInput == "darius") { champNum = 98; }
+            else if (userInput == "di"
+                || userInput == "dia"
+                || userInput == "dian"
+                || userInput == "moon"
+                || userInput == "moon lady"
+                || userInput == "diana") { champNum = 102; }
+            else if (userInput == "dra"
+                || userInput == "drav"
+                || userInput == "drave"
+                || userInput == "draven") { champNum = 99; }
+            else if (userInput == "dr"
+                || userInput == "dr."
+                || userInput == "mu"
+                || userInput == "mundo"
+                || userInput == "drmundo"
+                || userInput == "dr mundo"
+                || userInput == "dr. mundo"
+                || userInput == "dr.mundo") { champNum = 33; }
             #endregion
             #region E
-            else if (r == "ek"
-                || r == "ekk"
-                || r == "ekko") { champNum = 125; }
-            else if (r == "el"
-                || r == "spider"
-                || r == "spider lady"
-                || r == "elise") { champNum = 106; }
-            else if (r == "ev"
-                || r == "eve"
-                || r == "evelyn"
-                || r == "demon bitch"
-                || r == "evelynn") { champNum = 20; }
-            else if (r == "ez"
-                || r == "twink"
-                || r == "ezr"
-                || r == "ezreal") { champNum = 47; }
+            else if (userInput == "ek"
+                || userInput == "ekk"
+                || userInput == "ekko") { champNum = 125; }
+            else if (userInput == "el"
+                || userInput == "spider"
+                || userInput == "spider lady"
+                || userInput == "elise") { champNum = 106; }
+            else if (userInput == "ev"
+                || userInput == "eve"
+                || userInput == "evelyn"
+                || userInput == "demon bitch"
+                || userInput == "evelynn") { champNum = 20; }
+            else if (userInput == "ez"
+                || userInput == "twink"
+                || userInput == "ezr"
+                || userInput == "ezreal") { champNum = 47; }
             #endregion
             #region F
-            else if (r == "fid"
-                || r == "fidd"
-                || r == "fiddle"
-                || r == "spooky"
-                || r == "fiddlesticks") { champNum = 4; }
-            else if (r == "fio"
-                || r == "fior"
-                || r == "fiora") { champNum = 94; }
-            else if (r == "fiz"
-                || r == "fish"
-                || r == "fizz") { champNum = 87; }
+            else if (userInput == "fid"
+                || userInput == "fidd"
+                || userInput == "fiddle"
+                || userInput == "spooky"
+                || userInput == "fiddlesticks") { champNum = 4; }
+            else if (userInput == "fio"
+                || userInput == "fior"
+                || userInput == "fiora") { champNum = 94; }
+            else if (userInput == "fiz"
+                || userInput == "fish"
+                || userInput == "fizz") { champNum = 87; }
             #endregion
             #region G
-            else if (r == "gal"
-                || r == "gali"
-                || r == "galio") { champNum = 57; }
-            else if (r == "gp"
-                || r == "gang"
-                || r == "plank"
-                || r == "gangplank") { champNum = 30; }
-            else if (r == "gar"
-                || r == "demacia"
-                || r == "gare"
-                || r == "garen") { champNum = 50; }
-            else if (r == "gn"
-                || r == "gna"
-                || r == "gnar") { champNum = 120; }
-            else if (r == "grag"
-                || r == "fat"
-                || r == "fatty"
-                || r == "large"
-                || r == "graga"
-                || r == "gragas") { champNum = 44; }
-            else if (r == "grav"
-                || r == "grave"
-                || r == "graves") { champNum = 85; }
-            else if (r == "gw"
-                || r == "gwe"
-                || r == "gwen"
-                || r == "scissor"
-                || r == "scissors") { champNum = 155; }
+            else if (userInput == "gal"
+                || userInput == "gali"
+                || userInput == "galio") { champNum = 57; }
+            else if (userInput == "gp"
+                || userInput == "gang"
+                || userInput == "plank"
+                || userInput == "gangplank") { champNum = 30; }
+            else if (userInput == "gar"
+                || userInput == "demacia"
+                || userInput == "gare"
+                || userInput == "garen") { champNum = 50; }
+            else if (userInput == "gn"
+                || userInput == "gna"
+                || userInput == "gnar") { champNum = 120; }
+            else if (userInput == "grag"
+                || userInput == "fat"
+                || userInput == "fatty"
+                || userInput == "large"
+                || userInput == "graga"
+                || userInput == "gragas") { champNum = 44; }
+            else if (userInput == "grav"
+                || userInput == "grave"
+                || userInput == "graves") { champNum = 85; }
+            else if (userInput == "gw"
+                || userInput == "gwe"
+                || userInput == "gwen"
+                || userInput == "scissor"
+                || userInput == "scissors") { champNum = 155; }
             #endregion
             #region H
-            else if (r == "hec"
-                || r == "heca"
-                || r == "horse guy"
-                || r == "hecarim") { champNum = 96; }
-            else if (r == "donger"
-                || r == "dong"
-                || r == "dinger"
-                || r == "heim"
-                || r == "heime"
-                || r == "heimer"
-                || r == "heimerdinger") { champNum = 39; }
+            else if (userInput == "hec"
+                || userInput == "heca"
+                || userInput == "horse guy"
+                || userInput == "hecarim") { champNum = 96; }
+            else if (userInput == "donger"
+                || userInput == "dong"
+                || userInput == "dinger"
+                || userInput == "heim"
+                || userInput == "heime"
+                || userInput == "heimer"
+                || userInput == "heimerdinger") { champNum = 39; }
             #endregion
             #region I
-            else if (r == "il"
-                || r == "ill"
-                || r == "illa"
-                || r == "illao"
-                || r == "illaoi") { champNum = 128; }
-            else if (r == "ir"
-                || r == "ire"
-                || r == "irel"
-                || r == "irelia") { champNum = 64; }
-            else if (r == "iv"
-                || r == "ive"
-                || r == "iver"
-                || r == "green"
-                || r == "tree dude"
-                || r == "ivern") { champNum = 133; }
+            else if (userInput == "il"
+                || userInput == "ill"
+                || userInput == "illa"
+                || userInput == "illao"
+                || userInput == "illaoi") { champNum = 128; }
+            else if (userInput == "ir"
+                || userInput == "ire"
+                || userInput == "irel"
+                || userInput == "irelia") { champNum = 64; }
+            else if (userInput == "iv"
+                || userInput == "ive"
+                || userInput == "iver"
+                || userInput == "green"
+                || userInput == "tree dude"
+                || userInput == "ivern") { champNum = 133; }
             #endregion
             #region J
-            else if (r == "ja"
-                || r == "jan"
-                || r == "jana"
-                || r == "janna") { champNum = 33; }
-            else if (r == "j4"
-                || r == "jar"
-                || r == "jarv"
-                || r == "jarvan"
-                || r == "jarvan4"
-                || r == "jarvaniv") { champNum = 71; }
-            else if (r == "jax"
-                || r == "realweapon"
-                || r == "real weapon") { champNum = 5; }
-            else if (r == "jay"
-                || r == "jayc"
-                || r == "jayce") { champNum = 100; }
-            else if (r == "jh"
-                || r == "jhi"
-                || r == "four"
-                || r == "jhin") { champNum = 129; }
-            else if (r == "ji"
-                || r == "jin"
-                || r == "jinx") { champNum = 116; }
+            else if (userInput == "ja"
+                || userInput == "jan"
+                || userInput == "jana"
+                || userInput == "janna") { champNum = 34; }
+            else if (userInput == "j4"
+                || userInput == "jar"
+                || userInput == "jarv"
+                || userInput == "jarvan"
+                || userInput == "jarvan4"
+                || userInput == "jarvaniv") { champNum = 71; }
+            else if (userInput == "jax"
+                || userInput == "realweapon"
+                || userInput == "real weapon") { champNum = 5; }
+            else if (userInput == "jay"
+                || userInput == "jayc"
+                || userInput == "jayce") { champNum = 100; }
+            else if (userInput == "jh"
+                || userInput == "jhi"
+                || userInput == "four"
+                || userInput == "jhin") { champNum = 129; }
+            else if (userInput == "ji"
+                || userInput == "jin"
+                || userInput == "jinx") { champNum = 116; }
             #endregion
             #region K
-            else if (r == "kai"
-                || r == "kaisa"
-                || r == "kai sa"
-                || r == "kai'sa") { champNum = 140; }
-            else if (r == "kal"
-                || r == "kali"
-                || r == "kalis"
-                || r == "kalist"
-                || r == "kalista") { champNum = 122; }
-            else if (r == "karm"
-                || r == "karma") { champNum = 69; }
-            else if (r == "kart"
-                || r == "karth"
-                || r == "karthu"
-                || r == "karthus") { champNum = 23; }
-            else if (r == "kas"
-                || r == "kass"
-                || r == "16"
-                || r == "sixteen"
-                || r == "level16"
-                || r == "level 16"
-                || r == "kassadin") { champNum = 29; }
-            else if (r == "kat"
-                || r == "kata"
-                || r == "reset"
-                || r == "resets"
-                || r == "katarina") { champNum = 36; }
-            else if (r == "kayl"
-                || r == "kayle") { champNum = 6; }
-            else if (r == "kany"
-                || r == "kane"
-                || r == "rhaast"
-                || r == "rhast"
-                || r == "darkin"
-                || r == "kayn") { champNum = 137; }
-            else if (r == "ke"
-                || r == "ken"
-                || r == "kenn"
-                || r == "kenne"
-                || r == "kennen") { champNum = 49; }
-            else if (r == "kha"
-                || r == "khazix"
-                || r == "k6"
-                || r == "bug"
-                || r == "kha zix"
-                || r == "kha'zix") { champNum = 105; }
-            else if (r == "ki"
-                || r == "kin"
-                || r == "kind"
-                || r == "kindr"
-                || r == "kindre"
-                || r == "kindred") { champNum = 127; }
-            else if (r == "kl"
-                || r == "kle"
-                || r == "kled") { champNum = 132; }
-            else if (r == "kog"
-                || r == "kogm"
-                || r == "kogmaw"
-                || r == "kog maw"
-                || r == "kog'maw") { champNum = 54; }
+            else if (userInput == "kai"
+                || userInput == "kaisa"
+                || userInput == "kai sa"
+                || userInput == "kai'sa") { champNum = 140; }
+            else if (userInput == "kal"
+                || userInput == "kali"
+                || userInput == "kalis"
+                || userInput == "kalist"
+                || userInput == "kalista") { champNum = 122; }
+            else if (userInput == "karm"
+                || userInput == "karma") { champNum = 69; }
+            else if (userInput == "kart"
+                || userInput == "karth"
+                || userInput == "karthu"
+                || userInput == "karthus") { champNum = 23; }
+            else if (userInput == "kas"
+                || userInput == "kass"
+                || userInput == "16"
+                || userInput == "sixteen"
+                || userInput == "level16"
+                || userInput == "level 16"
+                || userInput == "kassadin") { champNum = 29; }
+            else if (userInput == "kat"
+                || userInput == "kata"
+                || userInput == "reset"
+                || userInput == "resets"
+                || userInput == "katarina") { champNum = 37; }
+            else if (userInput == "kayl"
+                || userInput == "kayle") { champNum = 6; }
+            else if (userInput == "kany"
+                || userInput == "kane"
+                || userInput == "rhaast"
+                || userInput == "rhast"
+                || userInput == "darkin"
+                || userInput == "kayn") { champNum = 137; }
+            else if (userInput == "ke"
+                || userInput == "ken"
+                || userInput == "kenn"
+                || userInput == "kenne"
+                || userInput == "kennen") { champNum = 49; }
+            else if (userInput == "kha"
+                || userInput == "khazix"
+                || userInput == "k6"
+                || userInput == "bug"
+                || userInput == "kha zix"
+                || userInput == "kha'zix") { champNum = 105; }
+            else if (userInput == "ki"
+                || userInput == "kin"
+                || userInput == "kind"
+                || userInput == "kindr"
+                || userInput == "kindre"
+                || userInput == "kindred") { champNum = 127; }
+            else if (userInput == "kl"
+                || userInput == "kle"
+                || userInput == "kled") { champNum = 132; }
+            else if (userInput == "kog"
+                || userInput == "kogm"
+                || userInput == "kogmaw"
+                || userInput == "kog maw"
+                || userInput == "kog'maw") { champNum = 54; }
             #endregion
             #region L
-            else if (r == "lb"
-                || r == "leb"
-                || r == "lebl"
-                || r == "leblanc") { champNum = 63; }
-            else if (r == "lee"
-                || r == "sin"
-                || r == "leesin"
-                || r == "lee sin") { champNum = 73; }
-            else if (r == "leo"
-                || r == "leon"
-                || r == "leona") { champNum = 79; }
-            else if (r == "lil"
-                || r == "lili"
-                || r == "deer"
-                || r == "lilia"
-                || r == "lillia") { champNum = 149; }
-            else if (r == "lis"
-                || r == "liss"
-                || r == "ice queen"
-                || r == "lissandra") { champNum = 113; }
-            else if (r == "luc"
-                || r == "luci"
-                || r == "lucia"
-                || r == "lucian") { champNum = 115; }
-            else if (r == "lul"
-                || r == "poly"
-                || r == "squirrel"
-                || r == "polymorph"
-                || r == "lulu") { champNum = 95; }
-            else if (r == "lux"
-                || r == "light lady") { champNum = 62; }
+            else if (userInput == "lb"
+                || userInput == "leb"
+                || userInput == "lebl"
+                || userInput == "leblanc") { champNum = 63; }
+            else if (userInput == "lee"
+                || userInput == "sin"
+                || userInput == "leesin"
+                || userInput == "lee sin") { champNum = 73; }
+            else if (userInput == "leo"
+                || userInput == "leon"
+                || userInput == "leona") { champNum = 79; }
+            else if (userInput == "lil"
+                || userInput == "lili"
+                || userInput == "deer"
+                || userInput == "lilia"
+                || userInput == "lillia") { champNum = 149; }
+            else if (userInput == "lis"
+                || userInput == "liss"
+                || userInput == "ice queen"
+                || userInput == "lissandra") { champNum = 113; }
+            else if (userInput == "luc"
+                || userInput == "luci"
+                || userInput == "lucia"
+                || userInput == "lucian") { champNum = 115; }
+            else if (userInput == "lul"
+                || userInput == "poly"
+                || userInput == "squirrel"
+                || userInput == "polymorph"
+                || userInput == "lulu") { champNum = 95; }
+            else if (userInput == "lux"
+                || userInput == "light lady") { champNum = 62; }
             #endregion
             #region M
-            else if (r == "yi"
-                || r == "mas"
-                || r == "master"
-                || r == "masteryi"
-                || r == "master yi") { champNum = 7; }
-            else if (r == "malp"
-                || r == "malph"
-                || r == "rock"
-                || r == "mountain"
-                || r == "malphite") { champNum = 35; }
-            else if (r == "malz"
-                || r == "malza"
-                || r == "press r"
-                || r == "malzahar") { champNum = 52; }
-            else if (r == "mao"
-                || r == "maok"
-                || r == "tree"
-                || r == "maokai") { champNum = 70; }
-            else if (r == "mf"
-                || r == "mis"
-                || r == "for"
-                || r == "fort"
-                || r == "fortune"
-                || r == "miss"
-                || r == "missfortune"
-                || r == "miss fortune") { champNum = 59; }
-            else if (r == "mord"
-                || r == "morde"
-                || r == "kaiser"
-                || r == "death realm"
-                || r == "mordekaiser") { champNum = 46; }
-            else if (r == "morg"
-                || r == "morga"
-                || r == "morgan"
-                || r == "black shield"
-                || r == "morgana") { champNum = 8; }
+            else if (userInput == "yi"
+                || userInput == "mas"
+                || userInput == "master"
+                || userInput == "masteryi"
+                || userInput == "master yi") { champNum = 7; }
+            else if (userInput == "malp"
+                || userInput == "malph"
+                || userInput == "rock"
+                || userInput == "mountain"
+                || userInput == "malphite") { champNum = 35; }
+            else if (userInput == "malz"
+                || userInput == "malza"
+                || userInput == "press userInput"
+                || userInput == "malzahar") { champNum = 52; }
+            else if (userInput == "mao"
+                || userInput == "maok"
+                || userInput == "tree"
+                || userInput == "maokai") { champNum = 70; }
+            else if (userInput == "mf"
+                || userInput == "mis"
+                || userInput == "for"
+                || userInput == "fort"
+                || userInput == "fortune"
+                || userInput == "miss"
+                || userInput == "missfortune"
+                || userInput == "miss fortune") { champNum = 59; }
+            else if (userInput == "mord"
+                || userInput == "morde"
+                || userInput == "kaiser"
+                || userInput == "death realm"
+                || userInput == "mordekaiser") { champNum = 46; }
+            else if (userInput == "morg"
+                || userInput == "morga"
+                || userInput == "morgan"
+                || userInput == "black shield"
+                || userInput == "morgana") { champNum = 8; }
             #endregion
             #region N
-            else if (r == "nam"
-                || r == "nami") { champNum = 108; }
-            else if (r == "nas"
-                || r == "nasu"
-                || r == "susan"
-                || r == "nasus") { champNum = 38; }
-            else if (r == "naut"
-                || r == "nauti"
-                || r == "nautil"
-                || r == "nautilu"
-                || r == "anchor"
-                || r == "nautilus") { champNum = 93; }
-            else if (r == "ne"
-                || r == "nee"
-                || r == "neek"
-                || r == "lesbian"
-                || r == "neeko") { champNum = 142; }
-            else if (r == "ni"
-                || r == "nid"
-                || r == "nida"
-                || r == "cat lady"
-                || r == "nidalee") { champNum = 42; }
-            else if (r == "no"
-                || r == "noc"
-                || r == "noct"
-                || r == "noctu"
-                || r == "nightmare"
-                || r == "nocturne") { champNum = 72; }
-            else if (r == "nu"
-                || r == "willump"
-                || r == "nunuandwillump"
-                || r == "nunu and willump"
-                || r == "nunu&willump"
-                || r == "nunu & willump"
-                || r == "nunu") { champNum = 9; }
+            else if (userInput == "nam"
+                || userInput == "nami") { champNum = 108; }
+            else if (userInput == "nas"
+                || userInput == "nasu"
+                || userInput == "susan"
+                || userInput == "nasus") { champNum = 38; }
+            else if (userInput == "naut"
+                || userInput == "nauti"
+                || userInput == "nautil"
+                || userInput == "nautilu"
+                || userInput == "anchor"
+                || userInput == "nautilus") { champNum = 93; }
+            else if (userInput == "ne"
+                || userInput == "nee"
+                || userInput == "neek"
+                || userInput == "lesbian"
+                || userInput == "neeko") { champNum = 142; }
+            else if (userInput == "ni"
+                || userInput == "nid"
+                || userInput == "nida"
+                || userInput == "cat lady"
+                || userInput == "nidalee") { champNum = 42; }
+            else if (userInput == "no"
+                || userInput == "noc"
+                || userInput == "noct"
+                || userInput == "noctu"
+                || userInput == "nightmare"
+                || userInput == "nocturne") { champNum = 72; }
+            else if (userInput == "nu"
+                || userInput == "willump"
+                || userInput == "nunuandwillump"
+                || userInput == "nunu and willump"
+                || userInput == "nunu&willump"
+                || userInput == "nunu & willump"
+                || userInput == "nunu") { champNum = 9; }
             #endregion
             #region O
-            else if (r == "ol"
-                || r == "ola"
-                || r == "olaf") { champNum = 53; }
-            else if (r == "ori"
-                || r == "oria"
-                || r == "orian"
-                || r == "oriana"
-                || r == "orianna") { champNum = 77; }
-            else if (r == "orn"
-                || r == "horn"
-                || r == "ornn") { champNum = 138; }
+            else if (userInput == "ol"
+                || userInput == "ola"
+                || userInput == "olaf") { champNum = 53; }
+            else if (userInput == "ori"
+                || userInput == "oria"
+                || userInput == "orian"
+                || userInput == "oriana"
+                || userInput == "orianna") { champNum = 77; }
+            else if (userInput == "orn"
+                || userInput == "horn"
+                || userInput == "ornn") { champNum = 138; }
             #endregion
             #region P
-            else if (r == "pa"
-                || r == "pan"
-                || r == "pant"
-                || r == "panth"
-                || r == "pantheon") { champNum = 45; }
-            else if (r == "pop"
-                || r == "popp"
-                || r == "popy"
-                || r == "poppy") { champNum = 43; }
-            else if (r == "py"
-                || r == "pyk"
-                || r == "pyke") { champNum = 141; }
+            else if (userInput == "pa"
+                || userInput == "pan"
+                || userInput == "pant"
+                || userInput == "panth"
+                || userInput == "pantheon") { champNum = 45; }
+            else if (userInput == "pop"
+                || userInput == "popp"
+                || userInput == "popy"
+                || userInput == "poppy") { champNum = 43; }
+            else if (userInput == "py"
+                || userInput == "pyk"
+                || userInput == "pyke") { champNum = 141; }
             #endregion
             #region Q
-            else if (r == "qi"
-                || r == "qiy"
-                || r == "qiya"
-                || r == "qiyan"
-                || r == "qiyana") { champNum = 145; }
-            else if (r == "qu"
-                || r == "qui"
-                || r == "valor"
-                || r == "bird lady"
-                || r == "quin"
-                || r == "quinn") { champNum = 111; }
+            else if (userInput == "qi"
+                || userInput == "qiy"
+                || userInput == "qiya"
+                || userInput == "qiyan"
+                || userInput == "qiyana") { champNum = 145; }
+            else if (userInput == "qu"
+                || userInput == "qui"
+                || userInput == "valor"
+                || userInput == "bird lady"
+                || userInput == "quin"
+                || userInput == "quinn") { champNum = 111; }
             #endregion
             #region R
-            else if (r == "rak"
-                || r == "rakan") { champNum = 135; }
-            else if (r == "ram"
-                || r == "ramm"
-                || r == "ok"
-                || r == "rammus") { champNum = 29; }
-            else if (r == "rek"
-                || r == "reks"
-                || r == "reksai"
-                || r == "rek sai"
-                || r == "rek'sai") { champNum = 123; }
-            else if (r == "rel"
-                || r == "rell") { champNum = 153; }
-            else if (r == "rene"
-                || r == "croc"
-                || r == "crocodile"
-                || r == "renek"
-                || r == "renekton") { champNum = 68; }
-            else if (r == "reng"
-                || r == "renga"
-                || r == "knelse ifecat"
-                || r == "knelse ife cat"
-                || r == "rengar") { champNum = 103; }
-            else if (r == "riv"
-                || r == "rive"
-                || r == "riven") { champNum = 83; }
-            else if (r == "rum"
-                || r == "rumb"
-                || r == "rumbl"
-                || r == "rumble") { champNum = 75; }
-            else if (r == "ry"
-                || r == "ryz"
-                || r == "rework"
-                || r == "reworks"
-                || r == "ryze") { champNum = 10; }
+            else if (userInput == "rak"
+                || userInput == "rakan") { champNum = 135; }
+            else if (userInput == "ram"
+                || userInput == "ramm"
+                || userInput == "ok"
+                || userInput == "rammus") { champNum = 29; }
+            else if (userInput == "rek"
+                || userInput == "reks"
+                || userInput == "reksai"
+                || userInput == "rek sai"
+                || userInput == "rek'sai") { champNum = 123; }
+            else if (userInput == "rel"
+                || userInput == "rell") { champNum = 153; }
+            else if (userInput == "rene"
+                || userInput == "croc"
+                || userInput == "crocodile"
+                || userInput == "renek"
+                || userInput == "renekton") { champNum = 68; }
+            else if (userInput == "reng"
+                || userInput == "renga"
+                || userInput == "knelse ifecat"
+                || userInput == "knelse ife cat"
+                || userInput == "rengar") { champNum = 103; }
+            else if (userInput == "riv"
+                || userInput == "rive"
+                || userInput == "riven") { champNum = 83; }
+            else if (userInput == "rum"
+                || userInput == "rumb"
+                || userInput == "rumbl"
+                || userInput == "rumble") { champNum = 75; }
+            else if (userInput == "ry"
+                || userInput == "ryz"
+                || userInput == "rework"
+                || userInput == "reworks"
+                || userInput == "ryze") { champNum = 10; }
             #endregion
             #region S
-            else if (r == "sa"
-                || r == "sam"
-                || r == "sami"
-                || r == "samir"
-                || r == "samira") { champNum = 151; }
-            else if (r == "sej"
-                || r == "seju"
-                || r == "sejuani") { champNum = 91; }
-            else if (r == "sen"
-                || r == "senn"
-                || r == "senna") { champNum = 146; }
-            else if (r == "ser"
-                || r == "sera"
-                || r == "phine"
-                || r == "sona2.0"
-                || r == "sona 2"
-                || r == "sona 2.0"
-                || r == "serap"
-                || r == "seraph"
-                || r == "seraphi"
-                || r == "seraphin"
-                || r == "seraphine") { champNum = 152; }
-            else if (r == "set"
-                || r == "hot"
-                || r == "sett") { champNum = 148; }
-            else if (r == "sha"
-                || r == "shac"
-                || r == "shaco") { champNum = 40; }
-            else if (r == "she"
-                || r == "shen") { champNum = 48; }
-            else if (r == "shy"
-                || r == "shyv"
-                || r == "dragon lady"
-                || r == "shyvana") { champNum = 86; }
-            else if (r == "sin"
-                || r == "sing"
-                || r == "singe"
-                || r == "singed") { champNum = 18; }
-            else if (r == "sio"
-                || r == "sion") { champNum = 11; }
-            else if (r == "siv"
-                || r == "sivi"
-                || r == "sivir") { champNum = 12; }
-            else if (r == "sk"
-                || r == "ska"
-                || r == "skar"
-                || r == "skarn"
-                || r == "skarner") { champNum = 81; }
-            else if (r == "son"
-                || r == "sona") { champNum = 60; }
-            else if (r == "sor"
-                || r == "sora"
-                || r == "raka"
-                || r == "soraka") { champNum = 13; }
-            else if (r == "sw"
-                || r == "swa"
-                || r == "swai"
-                || r == "bird guy"
-                || r == "swain") { champNum = 61; }
-            else if (r == "syl"
-                || r == "syla"
-                || r == "chains"
-                || r == "sylas") { champNum = 143; }
-            else if (r == "syn"
-                || r == "synd"
-                || r == "syndr"
-                || r == "syndra") { champNum = 104; }
+            else if (userInput == "sa"
+                || userInput == "sam"
+                || userInput == "sami"
+                || userInput == "samir"
+                || userInput == "samira") { champNum = 151; }
+            else if (userInput == "sej"
+                || userInput == "seju"
+                || userInput == "sejuani") { champNum = 91; }
+            else if (userInput == "sen"
+                || userInput == "senn"
+                || userInput == "senna") { champNum = 146; }
+            else if (userInput == "ser"
+                || userInput == "sera"
+                || userInput == "phine"
+                || userInput == "sona2.0"
+                || userInput == "sona 2"
+                || userInput == "sona 2.0"
+                || userInput == "serap"
+                || userInput == "seraph"
+                || userInput == "seraphi"
+                || userInput == "seraphin"
+                || userInput == "seraphine") { champNum = 152; }
+            else if (userInput == "set"
+                || userInput == "hot"
+                || userInput == "sett") { champNum = 148; }
+            else if (userInput == "sha"
+                || userInput == "shac"
+                || userInput == "shaco") { champNum = 40; }
+            else if (userInput == "she"
+                || userInput == "shen") { champNum = 48; }
+            else if (userInput == "shy"
+                || userInput == "shyv"
+                || userInput == "dragon lady"
+                || userInput == "shyvana") { champNum = 86; }
+            else if (userInput == "sin"
+                || userInput == "sing"
+                || userInput == "singe"
+                || userInput == "singed") { champNum = 18; }
+            else if (userInput == "sio"
+                || userInput == "sion") { champNum = 11; }
+            else if (userInput == "siv"
+                || userInput == "sivi"
+                || userInput == "sivir") { champNum = 12; }
+            else if (userInput == "sk"
+                || userInput == "ska"
+                || userInput == "skar"
+                || userInput == "skarn"
+                || userInput == "skarner") { champNum = 81; }
+            else if (userInput == "son"
+                || userInput == "sona") { champNum = 60; }
+            else if (userInput == "sor"
+                || userInput == "sora"
+                || userInput == "raka"
+                || userInput == "soraka") { champNum = 13; }
+            else if (userInput == "sw"
+                || userInput == "swa"
+                || userInput == "swai"
+                || userInput == "bird guy"
+                || userInput == "swain") { champNum = 61; }
+            else if (userInput == "syl"
+                || userInput == "syla"
+                || userInput == "chains"
+                || userInput == "sylas") { champNum = 143; }
+            else if (userInput == "syn"
+                || userInput == "synd"
+                || userInput == "syndr"
+                || userInput == "syndra") { champNum = 104; }
             #endregion
             #region T
-            else if (r == "tah"
-                || r == "tahm"
-                || r == "ken"
-                || r == "kenc"
-                || r == "kench"
-                || r == "frog"
-                || r == "tahmkench"
-                || r == "tahm kench") { champNum = 126; }
-            else if (r == "tali"
-                || r == "taliy"
-                || r == "taliya"
-                || r == "rock lady"
-                || r == "taliyah") { champNum = 131; }
-            else if (r == "talo"
-                || r == "firstblood"
-                || r == "first blood"
-                || r == "25%"
-                || r == "talon") { champNum = 82; }
-            else if (r == "tar"
-                || r == "tari"
-                || r == "taric") { champNum = 31; }
-            else if (r == "tee"
-                || r == "teem"
-                || r == "aids"
-                || r == "teemo") { champNum = 14; }
-            else if (r == "th"
-                || r == "thr"
-                || r == "thre"
-                || r == "thres"
-                || r == "thresh") { champNum = 110; }
-            else if (r == "tri"
-                || r == "tris"
-                || r == "trist"
-                || r == "trista"
-                || r == "tristan"
-                || r == "tristana") { champNum = 15; }
-            else if (r == "tru"
-                || r == "trun"
-                || r == "trund"
-                || r == "trundl"
-                || r == "trundle") { champNum = 65; }
-            else if (r == "try"
-                || r == "tryn"
-                || r == "trynd"
-                || r == "trynda"
-                || r == "tryndamere") { champNum = 22; }
-            else if (r == "tf"
-                || r == "fate"
-                || r == "twistedfate"
-                || r == "twisted fate") { champNum = 16; }
-            else if (r == "tw"
-                || r == "rat"
-                || r == "sewer rat"
-                || r == "twi"
-                || r == "twit"
-                || r == "twitc"
-                || r == "twitch") { champNum = 21; }
+            else if (userInput == "tah"
+                || userInput == "tahm"
+                || userInput == "ken"
+                || userInput == "kenc"
+                || userInput == "kench"
+                || userInput == "frog"
+                || userInput == "tahmkench"
+                || userInput == "tahm kench") { champNum = 126; }
+            else if (userInput == "tali"
+                || userInput == "taliy"
+                || userInput == "taliya"
+                || userInput == "rock lady"
+                || userInput == "taliyah") { champNum = 131; }
+            else if (userInput == "talo"
+                || userInput == "firstblood"
+                || userInput == "first blood"
+                || userInput == "25%"
+                || userInput == "talon") { champNum = 82; }
+            else if (userInput == "tar"
+                || userInput == "tari"
+                || userInput == "taric") { champNum = 31; }
+            else if (userInput == "tee"
+                || userInput == "teem"
+                || userInput == "aids"
+                || userInput == "teemo") { champNum = 14; }
+            else if (userInput == "th"
+                || userInput == "thr"
+                || userInput == "thre"
+                || userInput == "thres"
+                || userInput == "thresh") { champNum = 110; }
+            else if (userInput == "tri"
+                || userInput == "tris"
+                || userInput == "trist"
+                || userInput == "trista"
+                || userInput == "tristan"
+                || userInput == "tristana") { champNum = 15; }
+            else if (userInput == "tru"
+                || userInput == "trun"
+                || userInput == "trund"
+                || userInput == "trundl"
+                || userInput == "trundle") { champNum = 65; }
+            else if (userInput == "try"
+                || userInput == "tryn"
+                || userInput == "trynd"
+                || userInput == "trynda"
+                || userInput == "tryndamere") { champNum = 22; }
+            else if (userInput == "tf"
+                || userInput == "fate"
+                || userInput == "twistedfate"
+                || userInput == "twisted fate") { champNum = 16; }
+            else if (userInput == "tw"
+                || userInput == "rat"
+                || userInput == "sewer rat"
+                || userInput == "twi"
+                || userInput == "twit"
+                || userInput == "twitc"
+                || userInput == "twitch") { champNum = 21; }
             #endregion
             #region U
-            else if (r == "ud"
-                || r == "udy"
-                || r == "udyr") { champNum = 41; }
-            else if (r == "ur"
-                || r == "urg"
-                || r == "urgo"
-                || r == "urgot") { champNum = 58; }
+            else if (userInput == "ud"
+                || userInput == "udy"
+                || userInput == "udyr") { champNum = 41; }
+            else if (userInput == "ur"
+                || userInput == "urg"
+                || userInput == "urgo"
+                || userInput == "urgot") { champNum = 58; }
             #endregion
             #region V
-            else if (r == "var"
-                || r == "varu"
-                || r == "varus") { champNum = 97; }
-            else if (r == "vn"
-                || r == "vay"
-                || r == "vayn"
-                || r == "vayne") { champNum = 76; }
-            else if (r == "vei"
-                || r == "veig"
-                || r == "veiga"
-                || r == "veigar") { champNum = 28; }
-            else if (r == "vel"
-                || r == "eye"
-                || r == "eye of sauron"
-                || r == "velk"
-                || r == "velko"
-                || r == "velkoz"
-                || r == "vel koz"
-                || r == "vel'koz") { champNum = 118; }
-            else if (r == "vex") { champNum = 157; }
-            else if (r == "6"
-                || r == "six"
-                || r == "vi") { champNum = 109; }
-            else if (r == "vie"
-                || r == "vieg"
-                || r == "viego"
-                || r == "bork") { champNum = 154; }
-            else if (r == "vik"
-                || r == "vikt"
-                || r == "vikto"
-                || r == "viktor") { champNum = 90; }
-            else if (r == "blood"
-                || r == "vla"
-                || r == "vlad"
-                || r == "vladi"
-                || r == "vladim"
-                || r == "vladimi"
-                || r == "vladimir") { champNum = 56; }
-            else if (r == "vo"
-                || r == "vb"
-                || r == "vol"
-                || r == "voli"
-                || r == "volib"
-                || r == "bear"
-                || r == "volibear") { champNum = 88; }
+            else if (userInput == "var"
+                || userInput == "varu"
+                || userInput == "varus") { champNum = 97; }
+            else if (userInput == "vn"
+                || userInput == "vay"
+                || userInput == "vayn"
+                || userInput == "vayne") { champNum = 76; }
+            else if (userInput == "vei"
+                || userInput == "veig"
+                || userInput == "veiga"
+                || userInput == "veigar") { champNum = 28; }
+            else if (userInput == "vel"
+                || userInput == "eye"
+                || userInput == "eye of sauron"
+                || userInput == "velk"
+                || userInput == "velko"
+                || userInput == "velkoz"
+                || userInput == "vel koz"
+                || userInput == "vel'koz") { champNum = 118; }
+            else if (userInput == "vex") { champNum = 157; }
+            else if (userInput == "6"
+                || userInput == "six"
+                || userInput == "vi") { champNum = 109; }
+            else if (userInput == "vie"
+                || userInput == "vieg"
+                || userInput == "viego"
+                || userInput == "bork") { champNum = 154; }
+            else if (userInput == "vik"
+                || userInput == "vikt"
+                || userInput == "vikto"
+                || userInput == "viktor") { champNum = 90; }
+            else if (userInput == "blood"
+                || userInput == "vla"
+                || userInput == "vlad"
+                || userInput == "vladi"
+                || userInput == "vladim"
+                || userInput == "vladimi"
+                || userInput == "vladimir") { champNum = 56; }
+            else if (userInput == "vo"
+                || userInput == "vb"
+                || userInput == "vol"
+                || userInput == "voli"
+                || userInput == "volib"
+                || userInput == "bear"
+                || userInput == "volibear") { champNum = 88; }
             #endregion
             #region W
-            else if (r == "ww"
-                || r == "war"
-                || r == "wick"
-                || r == "warwick") { champNum = 17; }
-            else if (r == "wu"
-                || r == "wuk"
-                || r == "wuko"
-                || r == "wukon"
-                || r == "wukong") { champNum = 80; }
+            else if (userInput == "ww"
+                || userInput == "war"
+                || userInput == "wick"
+                || userInput == "warwick") { champNum = 17; }
+            else if (userInput == "wu"
+                || userInput == "wuk"
+                || userInput == "wuko"
+                || userInput == "wukon"
+                || userInput == "wukong") { champNum = 80; }
             #endregion
             #region X
-            else if (r == "xa"
-                || r == "xay"
-                || r == "xaya"
-                || r == "xayah") { champNum = 136; }
-            else if (r == "xe"
-                || r == "xer"
-                || r == "xerath"
-                || r == "xerat") { champNum = 84; }
-            else if (r == "xi"
-                || r == "xin"
-                || r == "xinz"
-                || r == "zhao"
-                || r == "xinzhao"
-                || r == "xin zhao") { champNum = 55; }
+            else if (userInput == "xa"
+                || userInput == "xay"
+                || userInput == "xaya"
+                || userInput == "xayah") { champNum = 136; }
+            else if (userInput == "xe"
+                || userInput == "xer"
+                || userInput == "xerath"
+                || userInput == "xerat") { champNum = 84; }
+            else if (userInput == "xi"
+                || userInput == "xin"
+                || userInput == "xinz"
+                || userInput == "zhao"
+                || userInput == "xinzhao"
+                || userInput == "xin zhao") { champNum = 55; }
             #endregion
             #region Y
-            else if (r == "ya"
-                || r == "yas"
-                || r == "yasu"
-                || r == "yasuo") { champNum = 117; }
-            else if (r == "yon"
-                || r == "better yasuo"
-                || r == "yone") { champNum = 150; }
-            else if (r == "yor"
-                || r == "yori"
-                || r == "yoric"
-                || r == "yorick") { champNum = 78; }
-            else if (r == "yu"
-                || r == "damn cat"
-                || r == "yum"
-                || r == "yumi"
-                || r == "yummi"
-                || r == "yuumi") { champNum = 144; }
+            else if (userInput == "ya"
+                || userInput == "yas"
+                || userInput == "yasu"
+                || userInput == "yasuo") { champNum = 117; }
+            else if (userInput == "yon"
+                || userInput == "better yasuo"
+                || userInput == "yone") { champNum = 150; }
+            else if (userInput == "yor"
+                || userInput == "yori"
+                || userInput == "yoric"
+                || userInput == "yorick") { champNum = 78; }
+            else if (userInput == "yu"
+                || userInput == "damn cat"
+                || userInput == "yum"
+                || userInput == "yumi"
+                || userInput == "yummi"
+                || userInput == "yuumi") { champNum = 144; }
             #endregion
             #region Z
-            else if (r == "za"
-                || r == "zac") { champNum = 112; }
-            else if (r == "ze"
-                || r == "zed") { champNum = 107; }
-            else if (r == "zig"
-                || r == "bomb"
-                || r == "bombs"
-                || r == "zigs"
-                || r == "zigg"
-                || r == "ziggs") { champNum = 92; }
-            else if (r == "zil"
-                || r == "zile"
-                || r == "zilea"
-                || r == "groovy"
-                || r == "zilean") { champNum = 19; }
-            else if (r == "zo"
-                || r == "cancer"
-                || r == "aids"
-                || r == "zoe") { champNum = 139; }
-            else if (r == "zy"
-                || r == "zyr"
-                || r == "plant"
-                || r == "plants"
-                || r == "plant lady"
-                || r == "zyra") { champNum = 101; }
+            else if (userInput == "za"
+                || userInput == "zac") { champNum = 112; }
+            else if (userInput == "ze"
+                || userInput == "zed") { champNum = 107; }
+            else if (userInput == "zig"
+                || userInput == "bomb"
+                || userInput == "bombs"
+                || userInput == "zigs"
+                || userInput == "zigg"
+                || userInput == "ziggs") { champNum = 92; }
+            else if (userInput == "zil"
+                || userInput == "zile"
+                || userInput == "zilea"
+                || userInput == "groovy"
+                || userInput == "zilean") { champNum = 19; }
+            else if (userInput == "zo"
+                || userInput == "cancer"
+                || userInput == "aids"
+                || userInput == "zoe") { champNum = 139; }
+            else if (userInput == "zy"
+                || userInput == "zyr"
+                || userInput == "plant"
+                || userInput == "plants"
+                || userInput == "plant lady"
+                || userInput == "zyra") { champNum = 101; }
             #endregion
             #endregion
             #region numbers
-            else if (numeric)                               //if 'r' is numeric
+            else if (numeric)                               //if 'userInput' is numeric
             {
                 if (num <= champions.Count - 1)
                 {
@@ -1258,7 +1071,7 @@ namespace League_Randomizer
                 }
                 else
                 {
-                    Colors("Red");
+                    Colors.SetColor("Red");
                     Console.WriteLine("{0} is not a valid champion number.\n", num);
                     Console.ResetColor();
                     invalid = true;                         //else acknowledge that it's not valid and change invalid to true
@@ -1266,167 +1079,20 @@ namespace League_Randomizer
             }
             #endregion
             #region ds/sb
-            else if ((r == "ds"
-                || r == "dra"
-                || r == "drag"
-                || r == "dragon"
-                || r == "slayer"
-                || r == "dragonslayer") && champNum == 76) { dragonslayer = true; }
-            else if ((r == "sb"
-                || r == "sp"
-                || r == "spi"
-                || r == "spir"
-                || r == "spiri"
-                || r == "flor"
-                || r == "spirit"
-                || r == "blossom"
-                || r == "spirit blossom") && champNum == 76) { spiritBlossom = true; }
+            else if ((userInput == "ds") && champNum == 76) { dragonslayer = true; }
+            else if ((userInput == "sb") && champNum == 76) { spiritBlossom = true; }
             #endregion
             #region invalid
-            else if (r.Length > 0)
+            else if (userInput.Length > 0)
             {
                 invalid = true;
-                Colors("Red");
+                Colors.SetColor("Red");
                 Console.WriteLine("Invalid input. Please try again.\n");
                 Console.ResetColor();
             }
             #endregion
             if (champNum != oldChampNum) { Main(); }
         }
-        static void Skin()
-        {
-            /// Defines 'length' by getting the Length of the array in champions (jagged array), indexed by champNum;
-            /// ex. champNum=2 -> 3 objects in Annie (includes first object which is the champion name).
-            ///
-            /// Rolls skinNum starting at index 1 (0 is the champion's name) and up to length, since that's how many
-            /// objects exist inside the array.
-            ///
-            /// While loop checks if the newly rolled skin is equal to the previous skin (which is not defined the
-            /// first time) AND the amount of available skins in the array is more than 2 (if it is two, the only
-            /// skin is "Default" and it is only rolling that skin; while loop will run infinitely if it does not
-            /// check for length because skinNum will always equal oldSkin). Inside of while loop rolls again until
-            /// the new skin is not the same as the previous one.
-            ///
-            /// If dragonslayer or spiritBlossom are true (from Reply), changes them back to false and assigns 3 or 9
-            /// (respectively) to skinNum so it displays the corresponding skin. (More on this below)
-            ///
-            /// Defines 'name' by locating the string inside of champions (jagged array), using champNum to index
-            /// which array (champion) to select then skinNum to index which string (skin) to select.
-            /// ex. champNum=76 & skinNum=2 -> Aristocrat
-            Colors("LightGreen");                           //change color to green right away
-            int length = champions[champNum].Length;
-            if (enableDefaults)     ///if defaults are ENABLED
-            {
-                skinNum = roll.Next(2, length);     //ALWAYS roll WITH second entry: 'Default' since they're enabled
-                if (length >= 4)                //if there are more than ONLY 'Default' (plus number)
-                {
-                    while (skinNum == oldSkin)
-                    {
-                        skinNum = roll.Next(1, length);     //DO run anti-repeat since there is a skin AND default
-                    }
-                }
-            }
-            else///if defaults are DISABLED
-            {
-                if (length >= 4)                    //only omits defaults if default is not only skin
-                {
-                    skinNum = roll.Next(3, length); //ALWAYS roll WITHOUT second entry: 'Default' since they're disabled
-                    if (length >= 5)            //if there are more than just ONE skin and 'Default'
-                    {
-                        while (skinNum == oldSkin)
-                        {
-                            skinNum = roll.Next(3, length); //DO run anti-repeat since there are two skins even with defaults disabled
-                        }
-                    }
-                }
-                else
-                {
-                    skinNum = roll.Next(2, length); //roll starting and ending at default, not running anti-repeat
-                }
-            }
-            if (dragonslayer) { dragonslayer = false; skinNum = 3; }
-            if (spiritBlossom) { spiritBlossom = false; skinNum = 9; }
-            string name = champions[champNum][skinNum];
-            Console.Write(name);
-
-            /// Checks if the last character in name is a space using EndsWith method. If it is, the program knows
-            /// that the selected skin has chromas and the colors need to be rolled individually. (See next)
-            ///
-            /// Checks which skin with a chroma was rolled and assigns an array with the chroma colors depending on
-            /// which skin it is.
-            /// ex. Dragonslayer has Green, Red, and Silver (and a blank option so it is able to display the skin
-            /// without a chroma). It then rolls a number and eliminates repeats like above (does not need to check
-            /// for length, though) and displays the chroma color from the array by indexing it according to the
-            /// value of chromaNum.
-            ///
-            /// Assigns the chromaNum value to oldChroma so if the same skin is rolled again (which will only happen
-            /// if the user activates dragonslayer or spiritBlossom), the anti-repeat while loop will run.
-            ///
-            /// FINALLY, assigns the skinNum value to oldSkin to prevent repeats, similar to above with chromas.
-            /// Console.WriteLine ends the line and jumps another line using \n.
-            if (name.EndsWith(' '))                         //skins with chromas always end with a space
-            {
-                string[] sk = { "", "null" };
-                if (name == "Dragonslayer ")
-                {
-                    string[] chroma = { "", "Green", "Red", "Silver" };
-                    sk = chroma;
-                }   //Dragonslayer Vayne
-                else if (name == "Spirit Blossom ")
-                {
-                    string[] chroma = { "", "Red", "Yellow", "Green", "Purple", "Pink", "Black", "White" };
-                    sk = chroma;
-                }   //Spirit Blossom Vayne
-                else if (name == "Firecracker ")
-                {
-                    string[] chroma = { "", "White", "Black", "Light Blue", "Pink", "Orange", "Purple", "Green" };
-                    sk = chroma;
-                }   //Firecracker Jinx
-                else if (name == "Mecha ")
-                {
-                    string[] chroma = { "", "Yellow", "Green", "Black", "Tan", "White", "Blue", "Gray", "Orange" };
-                    sk = chroma;
-                }   //Mecha Malphite
-                else if (name == "Papercraft ")
-                {
-                    string[] chroma = { "", "White", "Light Blue", "Black", "Purple", "Pink", "Yellow" };
-                    sk = chroma;
-                }   //Papercraft Nunu & Willump
-                else if (name == "Rocket Girl ")
-                {
-                    string[] chroma = { "", "Blue", "Purple", "Red" };
-                    sk = chroma;
-                }   //Rocket Girl Tristana
-                else if (name == "Medieval ")
-                {
-                    string[] chroma = { "", "Purple" };
-                    sk = chroma;
-                }   //Medieval Twitch
-                else if (name == "Grey ")
-                {
-                    string[] chroma = { "", "Blue" };
-                    sk = chroma;
-                }   //Grey Warwick
-                else if (name == "Victorious ")
-                {
-                    if (champNum == 32) { string[] chroma = { "", "Green", "Purple" }; }            //Blitzcrank
-                    else if (champNum == 77) { string[] chroma = { "", "Green" }; sk = chroma; }    //Orianna
-                    else if (champNum == 85) { string[] chroma = { "", "White" }; sk = chroma; }    //Graves
-                    else if (champNum == 115) { string[] chroma = { "", "Green", "Light Blue" };    //Lucian
-                        sk = chroma; }
-                }   //Victorious Blitzcrank, Orianna, Graves, Lucian
-
-                chromaNum = roll.Next(sk.Length);
-                while (chromaNum == oldChroma) { chromaNum = roll.Next(sk.Length); }
-                Colors(sk[chromaNum]);                  //calls Colors() with the string from the array
-                Console.Write(sk[chromaNum]);           //prints chroma color after name of skin
-                oldChroma = chromaNum;                  //stores current chroma value to prevent repeats next time
-            }   //CHROMAS
-            oldSkin = skinNum;
-            Console.ResetColor();
-            Console.WriteLine("\n");
-        }
-
 
         static void Intro()
         /// This is a basic formatted introduction screen for the app.
@@ -1442,10 +1108,10 @@ namespace League_Randomizer
             string intro = "ifound1dollar's League of Legends Randomizer ";
             string begin = "Press any key to begin...";
             Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n");
-            Colors("Cyan");
+            Colors.SetColor("Cyan");
             Console.Write(new string(' ', (Console.WindowWidth - intro.Length) / 2));
             Console.Write(intro);
-            Colors("Magenta");
+            Colors.SetColor("Magenta");
             Console.WriteLine("{0}\n", appVer);
             Console.ResetColor();
             Console.Write(new string(' ', (Console.WindowWidth - begin.Length) / 2));
@@ -1459,13 +1125,13 @@ namespace League_Randomizer
                 Console.WriteLine("{0,3} {1}", champions[i][0], champions[i][1]);   //displays index 0 (number) and index 1 (name)
             }
             Console.Write("\nType 'a' for alphabetical or press enter to return...");
-            string r = Console.ReadLine().ToLower();
-            if (r == "a")               ///allows user to type 'a' to sort alphabetically
+            string userInput = Console.ReadLine().ToLower();
+            if (userInput == "a")               ///allows user to type 'a' to sort alphabetically
             {
                 List<string> names = new();                 //create new temporary list for names
                 for (int i = 1; i < champions.Count; i++)   //for every name in list
                 {
-                    names.Add(champions[i][1]);             //add the first index (name) of each array
+                    names.Add(champions[i][1]);             //add the second index (name) of each array
                 }
                 names.Sort();                               //sort the new list alphabetically
                 foreach (string word in names)              //for each string in list 'names'
@@ -1517,8 +1183,10 @@ namespace League_Randomizer
                 "(11/14/2021) v1.0.0: ",
                 "(11/15/2021) v1.0.1: ",
                 "(11/21/2021) v1.0.2: ",
+                "(12/06/2021) v1.0.3: ",
+                "(01/19/2022) v1.0.5: ",
             };
-            string[] text =
+            string[] details =
             {
                 "Began re-write of Skin_Chooser_2 using arrays and proper form.",
                 "Added champion name to index 0 of each array, to be displayed in header. Adjusted random " +
@@ -1545,23 +1213,26 @@ namespace League_Randomizer
                 "List of champions and skins now pulls data from .txt file. Soon will be able to update in-" +
                     "app.",
                 "'List' function now exists with both numeric and alphabetical organization.",
-                "Started creation of update function.",
+                "Started implementation of update functionality.",
                 "Completed update function. Inputting numbers now parses and uses the int value to select a " +
-                    "champion\n    by number.",
+                    "\n    champion by number.",
                 "Fixed out of bounds exception when removing skin. Removed fake skin from Vex. Adjusted while " +
                     "loop\n    in changelog to make more sense.",
                 "Fixed Blitzcrank bug (changing champNum to Janna's) and added Victorious Blitzcrank chromas.",
+                "Fixed various bugs with champion numbers.",
+                "Added better (and more) in-line comments throughout code. Changed some variable names to be " +
+                    "\n    more descriptive. UpdateChampion and UpdateSkin now have their own classes."
             };
 
             Console.Clear();
-            Colors("Yellow");
+            Colors.SetColor("Yellow");
             Console.WriteLine("\tCHANGELOG:");
-            for (int ver = 0; ver < versions.Length; ver++)
+            for (int currIndex = 0; currIndex < versions.Length; currIndex++)
             {
-                Colors("Cyan");
-                Console.Write(string.Format(" {0, -21}", versions[ver]));
-                Colors("White");
-                Console.WriteLine(text[ver]);
+                Colors.SetColor("Cyan");
+                Console.Write(string.Format(" {0, -21}", versions[currIndex]));
+                Colors.SetColor("White");
+                Console.WriteLine(details[currIndex]);
             }
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
@@ -1573,7 +1244,6 @@ namespace League_Randomizer
         /// (See Changelog summary)
         ///
         {
-            int num = 0;
             string[] commands =
             {
                 "Change mode: ",
@@ -1585,10 +1255,10 @@ namespace League_Randomizer
                 "List champions: ",
                 "Update info: "
             };
-            string[] text =
+            string[] instructions =
             {
                 "input Champion name or number (champion numbers are chronological)\n",
-                "\"r\" or \"rand\" or \"random\"",
+                "\"userInput\" or \"rand\" or \"random\"",
                 "\"c\" or \"cl\" or \"changelog\"",
                 "\"h\" or \"help\"",
                 "\"clear\"",
@@ -1598,39 +1268,19 @@ namespace League_Randomizer
             };
 
             Console.Clear();
-            Colors("Yellow");
+            Colors.SetColor("Yellow");
             Console.WriteLine("\tCOMMAND LIST:\n");
-            while (num < commands.Length)
+            for (int currIndex = 0; currIndex < commands.Length; currIndex++)
             {
-                Colors("Cyan");
-                Console.Write(string.Format(" {0, -19}", commands[num]));
-                Colors("White");
-                Console.WriteLine(text[num]);
-                num++;
+                Colors.SetColor("Cyan");
+                Console.Write(string.Format(" {0, -19}", commands[currIndex]));
+                Colors.SetColor("White");
+                Console.WriteLine(instructions[currIndex]);
             }
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
             Console.ReadKey();
             Main();
-        }
-
-
-        static void Colors(string color)
-        {
-            if (color == "Green") { Console.ForegroundColor = ConsoleColor.DarkGreen; }
-            else if (color == "LightGreen") { Console.ForegroundColor = ConsoleColor.Green; }
-            else if (color == "Red" || color == "Orange") { Console.ForegroundColor = ConsoleColor.Red; }
-            else if (color == "Blue") { Console.ForegroundColor = ConsoleColor.Blue; }
-            else if (color == "Cyan" || color == "Silver" || color == "Light Blue" || color == "Tan")
-            {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-            }
-            else if (color == "Yellow") { Console.ForegroundColor = ConsoleColor.Yellow; }
-            else if (color == "Magenta" || color == "Pink") { Console.ForegroundColor = ConsoleColor.Magenta; }
-            else if (color == "Purple") { Console.ForegroundColor = ConsoleColor.DarkMagenta; }
-            else if (color == "Gray") { Console.ForegroundColor = ConsoleColor.Gray; }
-            else if (color == "White") { Console.ForegroundColor = ConsoleColor.White; }
-            else if (color == "Black") { Console.ForegroundColor = ConsoleColor.DarkGray; }
         }
     }
 }

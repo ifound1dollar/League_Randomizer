@@ -44,10 +44,10 @@
 43,POPPY,Default
 44,GRAGAS,Default
 45,PANTHEON,Default
-46,MORDEKAISER,Default
+46,MORDEKAISER,Default,Dragon Knight
 47,EZREAL,Default,Pulsefire,Frosted
 48,SHEN,Default
-49,KENNEN,Default
+49,KENNEN,Default,Deadly
 50,GAREN,Default
 51,AKALI,Default,Blood Moon
 52,MALZAHAR,Default,Overlord
@@ -65,7 +65,7 @@
 64,IRELIA,Default
 65,TRUNDLE,Default
 66,CASSIOPEIA,Default
-67,CAITLYN,Default,Safari
+67,CAITLYN,Default,Safari,Arcane
 68,RENEKTON,Default,SKT T1
 69,KARMA,Default
 70,MAOKAI,Default,Victorious
@@ -82,7 +82,7 @@
 81,SKARNER,Default
 82,TALON,Default
 83,RIVEN,Default,Arcade
-84,XERATH,Default
+84,XERATH,Default,Scorched Earth
 85,GRAVES,Default,Victorious 
 86,SHYVANA,Default
 87,FIZZ,Default,Atlantean
@@ -114,7 +114,7 @@
 113,LISSANDRA,Default
 114,AATROX,Default,Victorious
 115,LUCIAN,Default,Victorious ,Hired Gun
-116,JINX,Default,Firecracker 
+116,JINX,Default,Firecracker ,Arcane
 117,YASUO,Default,Battle Boss
 118,VEL'KOZ,Default
 119,BRAUM,Default,Santa
