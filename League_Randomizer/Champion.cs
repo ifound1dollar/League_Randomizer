@@ -22,7 +22,7 @@ namespace League_Randomizer
             _name  = indeces[1];                            //second object in list is the name
             for (int i = 2; i < indeces.Length; i++)        //starting AFTER the second object in list
             {
-                _skins.Add(indeces[i]);                     //add each object in list to list of skins
+                _skins.Add(indeces[i]);                         //add each object in list to list of skins
             }
         }
         public string Index //champion's index getter
@@ -47,7 +47,7 @@ namespace League_Randomizer
             if (Program.enableDefaults)     //if defaults enabled
             {
                 rolledNum = roll.Next(_skins.Count);
-                if (_skins.Count >= 2)                      //run anti-repeat if more than one skin exists
+                if (_skins.Count >= 2)                      //run anti-repeat ONLY if more than one skin exists
                 {
                     while (rolledNum == oldSkinNum)
                     {
@@ -57,36 +57,37 @@ namespace League_Randomizer
             }
             else
             {
-                if (_skins.Count >= 2)
+                if (_skins.Count >= 2)                  //if more than one skin exists (not just Default)
                 {
-                    rolledNum = roll.Next(1, _skins.Count);       //omit first entry (Default) if more than one skin exists
-                    if (_skins.Count >= 3)
+                    rolledNum = roll.Next(1, _skins.Count);     //omit first entry (Default)
+                    if (_skins.Count >= 3)                      //if there is Default and AT LEAST 2 other skins
                     {
                         while (rolledNum == oldSkinNum)
                         {
-                            rolledNum = roll.Next(1, _skins.Count);   //run anti-repeat if there is more than one skin beyond Default
+                            rolledNum = roll.Next(1, _skins.Count);   //run anti-repeat (roll until new skin does not match previous skin)
                         }
                     }
                 }
                 else
                 {
-                    rolledNum = roll.Next(_skins.Count);          //if only one skin (Default), don't omit Default or run anti-repeat
+                    rolledNum = roll.Next(_skins.Count);    //if only one skin (Default), don't omit Default OR run anti-repeat
                 }
             }
 
             if (Program.dragonslayer) { Program.dragonslayer = false; rolledNum = 2; }      //force dragonslayer roll
             if (Program.spiritBlossom) { Program.spiritBlossom = false; rolledNum = 8; }    //force spirit blossom roll
+                //dragonslayer and spiritBlossom will only ever be true while in Vayne mode
 
             Colors.SetColor("LightGreen");
-            Console.Write(_skins[rolledNum]);               //display the name of the skin
+            Console.Write(_skins[rolledNum]);           //display the name of the skin
 
-            if (_skins[rolledNum].EndsWith(" "))            //skins with a chroma have a space as the last character
+            if (_skins[rolledNum].EndsWith(" "))        //skins with a chroma have a space as the last character
             {
-                Console.Write(Chroma(_skins[rolledNum]));       //call Chroma local method, which returns a chroma
+                Console.Write(Chroma(_skins[rolledNum]));   //call Chroma local method, which returns a chroma
             }
 
             Console.WriteLine("\n");
-            oldSkinNum = rolledNum;                         //oldSkinNum is assigned most recent skin each iteration
+            oldSkinNum = rolledNum;                     //oldSkinNum is assigned most recent skin each iteration
             Console.ResetColor();
         }
 
@@ -144,7 +145,7 @@ namespace League_Randomizer
             Colors.SetColor(chromaColor);               //pass chromaColor to Colors.SetColor to change console color to match
             oldChromaNum = rolledNum;                   //oldSkinNum is assigned most recent skin each iteration
 
-            return chromaColor;
+            return chromaColor;                         //returns chroma string, with color changed to correspond
         }
     }
 }
