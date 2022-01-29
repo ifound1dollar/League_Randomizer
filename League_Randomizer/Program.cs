@@ -50,10 +50,6 @@ namespace League_Randomizer
 
         #region Program class variable declarations
         static bool first = true;                   //tells Main() to run initial operations
-        public static bool dragonslayer;
-        public static bool spiritBlossom;
-        public static bool enableDefaults;          //three publics are also accessed in Champion class
-
         static int champNum;                        //integer that is used to select/change the current champion
 
         public static readonly List<string[]> champions = new();
@@ -61,7 +57,7 @@ namespace League_Randomizer
         public static readonly List<string[]> champion_strings = new();
             //list of string arrays with all strings that are compared with input to change the current champion mode
         #endregion
-        static readonly string appVer = "v2.0.1";       //app version string that is easily accessible
+        static readonly string appVer = "v2.1.0";       //app version string that is easily accessible
         static void Main()
         /// Program is focused primarily in Main function, where the while loop is located. Calls other
         /// functions generously.
@@ -92,38 +88,30 @@ namespace League_Randomizer
             Console.ResetColor();
             if (first)                          //checks if it should run initial operations
             {
-                LoadChampions();                    //loads list of champion string[]s from champions file
-                LoadStrings();                      //loads list of keyword string[]s from champion strings file
-                first = false;                      //sets first to false
-                enableDefaults = false;             //set enableDefaults to false
-                champNum = 76;                      //default to Vayne mode
-                Intro();                            //call Intro to display
-                Console.Clear();                    //clear console after intro
+                LoadChampions();                        //loads list of champion string[]s from champions file
+                LoadStrings();                          //loads list of keyword string[]s from champion strings file
+                Champion.EnableDefaults(first);         //call EnableDefaults and pass first variable, automatically setting defaults to false
+                champNum = 76;                          //default to Vayne mode
+                Intro();                                //call Intro to display
+                first = false;                          //sets first to false
             }
 
             Champion currentChampion = new(champions[champNum]);
-                                            //declare new currentChampion object and pass current champion string array
-
-            Colors.SetColor("Cyan");
-            Console.WriteLine("League Randomizer " + appVer);
-            Console.ResetColor();
-            Console.WriteLine("Default skins enabled: " + enableDefaults);
-            Colors.SetColor("Magenta");
-            Console.WriteLine("  {0} {1}\n", currentChampion.Name, currentChampion.Index);
-            Console.ResetColor();           //displays info in header: program title, version, and champion name + number
+                //declare new currentChampion object and pass current champion string array
+            currentChampion.PrintHeader(appVer);    //print header info
 
             while (!false)
             {
-                if (GetInput())                 //calls GetInput() each iteration to get user input
-                                                //GetInput() returns true/false depending if input was valid/invalid
+                if (GetInput(currentChampion))  //calls GetInput() each iteration and passes Champion object
+                                                //GetInput() returns true/false depending if skin should be printed
                 {
-                    currentChampion.PrintSkin();    //if input was valid, call PrintSkin() method from currentChampion object
+                    currentChampion.PrintSkin();    //if skin should be printed, call PrintSkin() method from currentChampion object
                 }
             }
         }
 
 
-        static bool GetInput()
+        static bool GetInput(Champion currentChampion)
         /// Reply function exists to get the user's input. All conditionals use else if (except for first).
         /// 
         /// 'oldChampNum' is reset to equal champNum every time Reply is called. This allows the below if()
@@ -159,40 +147,82 @@ namespace League_Randomizer
         {
             //COMMENT BLOCK ABOVE IS OLD AND USELESS
 
-            bool inputIsValid = true;               //is returned at end of method, tells Main() whether input was valid
+            bool shouldPrintSkin = true;            //is returned at end of method, tells Main() whether a skin should be printed
             Console.Write("Press enter to run...");
             Colors.SetColor("Magenta");
             string userInput = Console.ReadLine().ToLower().Trim();         //get user input, casting to lowercase and trimming whitespace
             bool numeric = Int32.TryParse(userInput, out int numericInput); //check if userInput is numeric and try to parse
             Console.ResetColor();
 
-            #region clear screen
-            if (userInput == "clear")
-            {
-                Main();                             //calls to main, which automatically clears screen
-            }
-            #endregion
             #region reset
-            else if (userInput == "reset" || userInput == "intro")
+            if (userInput == "reset" || userInput == "intro")
             {
                 first = true;                       //forces program to print intro and populate champions list again
                 champions.Clear();                  //clears champions list array to be re-written
                 champion_strings.Clear();
-                Main();                             //return to main
+                Main();                             //return to main with first set to true
+            }
+            #endregion
+            #region clear screen
+            else if (userInput == "clear")
+            {
+                Console.Clear();
+                currentChampion.PrintHeader(appVer);    //clear screen then print header info
+                shouldPrintSkin = false;                //skin should not be printed
             }
             #endregion
             #region help
             else if (userInput == "h" || userInput == "help")
             {
                 Help();                             //call Help and return to main
-                Main();
+                currentChampion.PrintHeader(appVer);    //print header info (console clears in Help method)
+                shouldPrintSkin = false;                //skin should not be printed
             }
             #endregion
             #region changelog
             else if (userInput == "c" || userInput == "changelog")
             {
-                Changelog();                        //call Changelog and return to main
-                Main();
+                Changelog();                            //call Changelog and return to main
+                currentChampion.PrintHeader(appVer);    //print header info (console clears in Changelog method)
+                shouldPrintSkin = false;                //skin should not be printed
+            }
+            #endregion
+
+            #region enable/disable defaults
+            else if (userInput == "def" || userInput == "default" || userInput == "defaults")
+            {
+                Champion.EnableDefaults();              //call defaults function in Champion class
+                currentChampion.PrintHeader(appVer);    //print header info (console clears in above method)
+                shouldPrintSkin = false;                //skin should not be printed
+            }
+            #endregion
+            #region list champions
+            else if (userInput == "list")
+            {
+                List();                                 //call list function
+                currentChampion.PrintHeader(appVer);    //print header info (console clears in List method)
+                shouldPrintSkin = false;                //skin should not be printed
+            }
+            #endregion
+            #region update data/files
+            else if (userInput == "update")
+            {
+                Update();                               //call update function
+                currentChampion.PrintHeader(appVer);    //print header info (console clears in Update method)
+                shouldPrintSkin = false;                //skin should not be printed
+            }
+            #endregion
+
+            #region dragonslayer / spirit blossom
+            else if ((userInput == "ds") && champNum == 76)     //if user inputs "ds" while in Vayne mode
+            {
+                currentChampion.PrintSkin(2);       //call PrintSkin with non-default parameter, forcing roll of 2
+                shouldPrintSkin = false;            //don't print skin again
+            }
+            else if ((userInput == "sb") && champNum == 76)
+            {
+                currentChampion.PrintSkin(8);       //same as above with dragonslayer, but instead rolls 8
+                shouldPrintSkin = false;            //don't print skin again
             }
             #endregion
 
@@ -200,42 +230,9 @@ namespace League_Randomizer
             else if (userInput == "r" || userInput == "rand" || userInput == "random")
             {
                 RandomChampion();
-                Main();
+                Main();                                 //call main to instantiate new champion object
             }
             #endregion
-            #region enable/disable defaults
-            else if (userInput == "def" || userInput == "default" || userInput == "defaults")
-            {
-                EnableDefaults();                   //call defaults function
-                Main();                             //call Main to reset
-            }
-            #endregion
-            #region list champions
-            else if (userInput == "list")
-            {
-                List();                             //call list function
-                Main();                             //return to main
-            }
-            #endregion
-            #region update data/files
-            else if (userInput == "update")
-            {
-                Update();                           //call update function
-                Main();                             //return to main
-            }
-            #endregion
-
-            #region dragonslayer / spirit blossom
-            else if ((userInput == "ds") && champNum == 76)     //if user inputs "ds" while in Vayne mode
-            {
-                dragonslayer = true;                //set dragonslayer bool to true, which is checked in Champions.PrintSkin()
-            }
-            else if ((userInput == "sb") && champNum == 76)
-            {
-                spiritBlossom = true;               //same as above with dragonslayer
-            }
-            #endregion
-
             #region numeric input
             else if (numeric)                       //if 'userInput' is numeric
             {
@@ -243,20 +240,20 @@ namespace League_Randomizer
                                                     //ensure numericInput is between 1 and the number of champions
                 {
                     champNum = numericInput;            //if 'numericInput' is a valid champion number, change champNum to it
-                    Main();                             //call Main() when champNum is changed
+                    Main();                             //call Main() to instantiate new champion
                 }
                 else
                 {
                     Colors.SetColor("Red");
                     Console.WriteLine("{0} is not a valid champion number.\n", numericInput);
                     Console.ResetColor();               //else acknowledge that the input number is not valid
-                    inputIsValid = false;               //set inputIsValid to false
+                    shouldPrintSkin = false;            //set shouldPrintSkin to false
                 }
             }
             #endregion
-            #region champion strings
+            #region is champion changed
             else if (userInput.Length > 0 && IsChampionChanged(userInput))
-            //check length first to not unnecessarily call IsChampionChanged when user only pressed enter
+                //check length first to not unnecessarily call IsChampionChanged when user only pressed enter
             {
                 Main();                             //call Main if champion has been changed, resetting
             }
@@ -268,10 +265,10 @@ namespace League_Randomizer
                 Colors.SetColor("Red");
                 Console.WriteLine("Invalid input. Please try again.\n");
                 Console.ResetColor();
-                inputIsValid = false;               //acknowledge invalid input and set inputIsValid to false
+                shouldPrintSkin = false;            //acknowledge invalid input and set shouldPrintSkin to false
             }
             #endregion
-            return inputIsValid;                    //return bool based on whether input was valid
+            return shouldPrintSkin;             //return bool based on whether skin should be printed
         }
         static bool IsChampionChanged(string userInput)
         {
@@ -454,8 +451,7 @@ namespace League_Randomizer
                 Console.ResetColor();
                 Console.ReadLine();
             }
-
-            Main();                                     //return to main afterword
+            Console.Clear();
         }
 
         static void Intro()
@@ -483,6 +479,7 @@ namespace League_Randomizer
             Console.Write(new string(' ', (Console.WindowWidth - begin.Length) / 2));
             Console.Write(begin);                   //prints second screen, centered
             Console.ReadKey();                      //wait for user input
+            Console.Clear();
         }
         static void List()
         {
@@ -529,43 +526,7 @@ namespace League_Randomizer
                 Console.Write("\nPress enter to return...");
                 Console.ReadLine();
             }
-        }
-        static void EnableDefaults()
-        {
             Console.Clear();
-            string enabledOrDisabled;
-            if (enableDefaults)
-            {
-                enabledOrDisabled = "enabled";          //if enabled, change string to represent
-            }
-            else
-            {
-                enabledOrDisabled = "disabled";         //same as 'enabled' above
-            }
-
-            Colors.SetColor("Yellow");
-            Console.Write("Default skins are currently {0}.\n\tEnter 'enable' or 'disable' to update...",
-                enabledOrDisabled);                     //prompt user to enable or disable default skins
-            Console.ResetColor();
-            string userInput = Console.ReadLine().ToLower();
-
-            if (userInput == "enable" || userInput == "e")          //if user chooses to enable
-            {
-                Console.WriteLine("\nEnabled defaults.");
-                enableDefaults = true;                                  //acknowledge and set to TRUE
-            }
-            else if (userInput == "disable" || userInput == "d")    //else user chooses to disable
-            {
-                Console.WriteLine("\nDisabled defaults.");
-                enableDefaults = false;                                 //acknowledge and set to FALSE
-            }
-            else
-            {
-                Colors.SetColor("Red");
-                Console.WriteLine("\nInvalid input, cancelling.");
-                Console.ResetColor();                                   //acknowledge invalid input
-            }
-            Console.ReadLine();
         }
         static void RandomChampion()
         {
@@ -613,6 +574,7 @@ namespace League_Randomizer
                 "(01/19/2022) v1.0.6: ",
                 "(01/22/2022) v2.0.0: ",
                 "(01/22/2022) v2.0.1: ",
+                "(01/29/2022) v2.1.0: ",
             };
             string[] details =                  //string[] with each version's details so far
             {
@@ -661,6 +623,10 @@ namespace League_Randomizer
                     "\n    now properly returns swaps champions when inputting valid numbers. Adjusted some " +
                     "formatting with default\n    enabling/disabling. Adjusted formatting in update " +
                     "functions, intro, and main.",
+                "Header info is now printed from a method in the Champion class. enableDefaults bool is also " +
+                    "\n    now a method inside Champion. PrintSkin method now takes an optionally argument, " +
+                    "eliminating the need for\n    a dragonslayer/spiritBlossom boolean. Removed various " +
+                    "calls to Main as to not unnecessarily instantiate a new\n    champion each time.",
             };
 
             Console.Clear();
@@ -676,6 +642,7 @@ namespace League_Randomizer
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
             Console.ReadKey();                          //wait for user to press a key to return
+            Console.Clear();
         }
         static void Help()
         /// Works very similar to Changelog; simple help screen showing commands.
@@ -717,6 +684,7 @@ namespace League_Randomizer
             Console.ResetColor();
             Console.Write("\nPress any key to return...");
             Console.ReadKey();                          //wait for user to press a key to return
+            Console.Clear();
         }
     }
 }

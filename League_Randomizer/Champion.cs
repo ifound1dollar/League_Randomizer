@@ -11,6 +11,7 @@ namespace League_Randomizer
         static readonly Random roll = new();
         static int oldSkinNum = -1;
         static int oldChromaNum = -1;           //private variables used inside PrintSkin and PrintChroma
+        static bool enableDefaults;             //controls whether default skins can be rolled
 
         string _index;
         string _name;
@@ -40,43 +41,51 @@ namespace League_Randomizer
             }
         }
 
-        public void PrintSkin()
+        public void PrintHeader(string appVer)      //prints header info
         {
-            int rolledNum;
-            
-            if (Program.enableDefaults)     //if defaults enabled
+            Colors.SetColor("Cyan");
+            Console.WriteLine("League Randomizer " + appVer);
+            Console.ResetColor();
+            Console.WriteLine("Default skins enabled: " + enableDefaults);
+            Colors.SetColor("Magenta");
+            Console.WriteLine("  {0} {1}\n", _name, _index);
+            Console.ResetColor();           //displays info in header: program title, version, and champion name + number
+        }
+
+        public void PrintSkin(int rolledNum = -1)   //uses optional int parameter so a roll can be forced
+        {
+            if (rolledNum == -1)                        //if default parameter is used
             {
-                rolledNum = roll.Next(_skins.Count);
-                if (_skins.Count >= 2)                      //run anti-repeat ONLY if more than one skin exists
+                if (enableDefaults)     //if defaults enabled
                 {
-                    while (rolledNum == oldSkinNum)
-                    {
-                        rolledNum = roll.Next(_skins.Count);    //if the new skin is the same as previous, roll again until it isn't
-                    }
-                }
-            }
-            else
-            {
-                if (_skins.Count >= 2)                  //if more than one skin exists (not just Default)
-                {
-                    rolledNum = roll.Next(1, _skins.Count);     //omit first entry (Default)
-                    if (_skins.Count >= 3)                      //if there is Default and AT LEAST 2 other skins
+                    rolledNum = roll.Next(_skins.Count);
+                    if (_skins.Count >= 2)                      //run anti-repeat ONLY if more than one skin exists
                     {
                         while (rolledNum == oldSkinNum)
                         {
-                            rolledNum = roll.Next(1, _skins.Count);   //run anti-repeat (roll until new skin does not match previous skin)
+                            rolledNum = roll.Next(_skins.Count);    //if the new skin is the same as previous, roll again until it isn't
                         }
                     }
                 }
                 else
                 {
-                    rolledNum = roll.Next(_skins.Count);    //if only one skin (Default), don't omit Default OR run anti-repeat
+                    if (_skins.Count >= 2)                  //if more than one skin exists (not just Default)
+                    {
+                        rolledNum = roll.Next(1, _skins.Count);     //omit first entry (Default)
+                        if (_skins.Count >= 3)                      //if there is Default and AT LEAST 2 other skins
+                        {
+                            while (rolledNum == oldSkinNum)
+                            {
+                                rolledNum = roll.Next(1, _skins.Count);   //run anti-repeat (roll until new skin does not match previous skin)
+                            }
+                        }
+                    }
+                    else
+                    {
+                        rolledNum = roll.Next(_skins.Count);    //if only one skin (Default), don't omit Default OR run anti-repeat
+                    }
                 }
             }
-
-            if (Program.dragonslayer) { Program.dragonslayer = false; rolledNum = 2; }      //force dragonslayer roll
-            if (Program.spiritBlossom) { Program.spiritBlossom = false; rolledNum = 8; }    //force spirit blossom roll
-                //dragonslayer and spiritBlossom will only ever be true while in Vayne mode
 
             Colors.SetColor("LightGreen");
             Console.Write(_skins[rolledNum]);           //display the name of the skin
@@ -90,7 +99,6 @@ namespace League_Randomizer
             oldSkinNum = rolledNum;                     //oldSkinNum is assigned most recent skin each iteration
             Console.ResetColor();
         }
-
         string Chroma(string chromaSkin)
         {
             List<string> chroma = new();                //declare empty list for chromas
@@ -146,6 +154,51 @@ namespace League_Randomizer
             oldChromaNum = rolledNum;                   //oldSkinNum is assigned most recent skin each iteration
 
             return chromaColor;                         //returns chroma string, with color changed to correspond
+        }
+
+        public static void EnableDefaults(bool first = false)   //takes optional argument for when the program is first run
+        {
+            if (first)                              //if program has just started
+            {
+                enableDefaults = false;                 //set defaults to false
+                return;                                 //ignore code below since program has just began
+            }
+            
+            Console.Clear();
+            string enabledOrDisabled;
+            if (enableDefaults)
+            {
+                enabledOrDisabled = "enabled";          //if enabled, assign string to represent
+            }
+            else
+            {
+                enabledOrDisabled = "disabled";         //opposite as 'enabled' above
+            }
+
+            Colors.SetColor("Yellow");
+            Console.Write("Default skins are currently {0}.\n\tEnter 'enable' or 'disable' to update...",
+                enabledOrDisabled);                     //prompt user to enable or disable default skins
+            Console.ResetColor();
+            string userInput = Console.ReadLine().ToLower();
+
+            if (userInput == "enable" || userInput == "e")          //if user chooses to enable
+            {
+                Console.WriteLine("\nEnabled defaults.");
+                enableDefaults = true;                                  //acknowledge and set to TRUE
+            }
+            else if (userInput == "disable" || userInput == "d")    //else user chooses to disable
+            {
+                Console.WriteLine("\nDisabled defaults.");
+                enableDefaults = false;                                 //acknowledge and set to FALSE
+            }
+            else
+            {
+                Colors.SetColor("Red");
+                Console.WriteLine("\nInvalid input, cancelling.");
+                Console.ResetColor();                                   //acknowledge invalid input
+            }
+            Console.ReadLine();
+            Console.Clear();
         }
     }
 }
